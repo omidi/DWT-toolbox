@@ -1,14 +1,14 @@
 # DWT-toolbox: A collection of programs for analyzing positional dependency within TF binding sites
 Here you find a number of useful programs for analyzing TF binding specificity under the DWT model. We have implemented several functionalities of the DWT model in a form of a website which can be found at [dwt.unibas.ch](https://dwt.unibas.ch).
 
-Here we are providing a set of tools and scripts that can be used offline. For each tool, there is a directory that in addition to the source code and examples, there is a `README` and a `manual.txt` file. The content of each directory is independent from the other directories. The `README` and `manual.txt` files explain the content of the directory and give guidlines on running the programs. Moreoever, the content of `Examples` directory  under each directory demonstrates the usage of the program. 
+Here we are providing a set of tools and scripts that can be used offline. For each tool, there is a directory that in addition to the source code and examples, there is a `README` and a `manual.txt` file. The content of each directory is independent from the other directories. The `README` and `manual.txt` files explain the content of the directory and give guidelines on running the programs. Moreover, the content of `Examples` directory  under each directory demonstrates the usage of the program. 
 
 More specifically, following tools are provided in this repository: 
 * DWT_model: This directory contains a C++ implementation of the DWT model, which users can scan DNA sequences for identifying binding sites under the DWT model. 
 * Positional_Dependency_Posterior: In this directory, a C++ implementation can be found that is useful for calculating the posterior probabilities of positional dependencies within TF binding sites. 
 * diLogo: A Python script for generating graphical representation of the positional dependency model, provided a DWT flat file. 
 
-For compiling the C++ codes, we have created `Makefile` under `Source` directories. In Linux and Mac, by simply running `make` in the `Source` directory, the executable of the program will be created. 
+For compiling the C++ codes, we have created `Makefile` under `Source` directories. In Linux and Mac, by simply running  `make` in the `Source` directory, the executable of the program will be created. 
 
 For implementing the C++ codes, we have used several functions from the [Boost library](http://www.boost.org/). We have put a compatible version of the Boost directory under the `lib` directory, which needs to be first un-tarred. This is done by running the following command in the command line under the `lib` directory:
 
