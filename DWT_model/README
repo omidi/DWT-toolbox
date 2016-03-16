@@ -1,0 +1,27 @@
+This is the code for TFBS prediction using the DWT model.
+
+Provided are source-code, a manual, several examples of the program's usage.
+
+
+CONTENTS OF THIS DIRECTORY:
+
+Source -> Directory with source code and Makefile for compiling the source.
+
+Examples -> Directory with several examples to run the program.
+
+manual.txt -> A description of the program usage and input arguments.
+
+
+There are README files in each subdirectory to help you further.
+We suggest you first compile the code, in 'Source' directory, and
+after that take a look at the manual.txt file in this directory, as
+well as at some examples in the 'Examples' directory.
+
+
+Contact and credits:
+The DWT model was developed by Saeed Omidi and Erik van Nimwegen. 
+Please report any problems, bugs, comments, or requests
+
+for additional functionality to:
+saeed.omidi@gmail.com
+erik.vannimwegen@unibas.ch

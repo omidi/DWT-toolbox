@@ -1,0 +1,248 @@
+Dinucleotide Weight Tensors: Automated Incorporation of Pairwise Dependency 
+within Transcription Factor Binding Sites
+********************************************************************
+
+CONTENTS:
+
+0. Compiling DWT model
+1. Input files and their format
+   1.1 DWT flat file
+       1.1.1 Where to find DWT flat files
+   1.2 DNA FASTA file
+   1.3 Parameter file 
+2. Output file
+3. Contact and credits.
+
+*********************************************************************
+
+
+0. Compiling
+Under Linux, you can use the provided Makefile to compile MotEvo and the
+UFE model. Simply type 'make' in the 'Source' directory.
+
+If you prefer to do it manually, you can run the following commands in the 
+'Source' directory:
+
+g++ -c -Wall -g3 -O3 -I boost_1_41_0/ -o Score.o Score.cpp
+g++ -c -Wall -g3 -O3 -I boost_1_41_0/ -o Alignment.o Alignment.cpp
+g++ -c -Wall -g3 -O3 -I boost_1_41_0/ -o BackgroundModel.o BackgroundModel.cpp
+g++ -c -Wall -g3 -O3 -I boost_1_41_0/ -o constants.o constants.cpp
+g++ -c -Wall -g3 -O3 -I boost_1_41_0/ -o Decomposition.o Decomposition.cpp
+g++ -c -Wall -g3 -O3 -I boost_1_41_0/ -o Motif.o Motif.cpp
+g++ -c -Wall -g3 -O3 -I boost_1_41_0/ -o Window.o Window.cpp
+g++ -c -Wall -g3 -O3 -I boost_1_41_0/ -o ParameterFile.o ParameterFile.cpp
+g++ -c -Wall -g3 -O3 -I boost_1_41_0/ -o DWT_model.o DWT_model.cpp
+
+Following that, you can issue the following command to make the executable for 
+the DWT model:
+
+g++ -Wall -g3 -O3 Score.o Alignment.o BackgroundModel.o \
+constants.o Decomposition.o Motif.o \ 
+Window.o ParameterFile.o DWT_model.o  \
+-o DWT_TFBS_prediction
+
+This command produce a binary file named "DWT_TFBS_prediction" which is the 
+executable for running the DWT model. Also note that, after running this command, 
+the object files (finished with .o) are not necessary, hence can be removed from 
+the directory by:
+
+rm *.o 
+
+This should also work under MACOS. Second note: we use the GNU C++ compiler g++. 
+You can of course use another C++ compiler. Under Windows you will need to know 
+how to compile C++ source code yourself.
+
+Besire the standard libraries in C++, this program uses several functions from
+the Boost library. Installing the Boost library is not required, since we have
+copied a compatible version of the Boost library at '../lib/'. The file is compressed
+which needs to be uncompressed. To do that, go to the '../lib/' directory and
+issue the following command:
+
+tar -xvf boost_1_41_0.tar.gz
+
+Note that if the Boost library is already uncompressed, this step in not necessary.
+
+
+
+1. Input files and their format
+In this section we describe the input paramters (arguments) that are needed for 
+running the DWT_TFBS_prediction program. Below shows an example of how to run 
+the program:
+
+./DWT_TFBS_prediction CTCF.dwt sequences.fasta param_file.txt
+
+We now explain each of these input parameters, with the same order. 
+
+
+
+1.1. DWT flat file
+The DWT flat file encodes the binding specificity of a TF under the DWT model. It
+serves the same purpose as the normal WM (PSWM) file, but includes more information
+about the probability (or frequency) of dinucleotides at each pairs of positions
+within TF binding sites.
+
+Below, we show an example of a DWT flat file:
+
+NA      CTCF
+PO1     PO2     AA      AC      AG      AT      CA      CC      CG      CT      GA      GC      GG      GT      TA      TC      TG      TT
+1       2       7.298   6.697   27.338  8.731   33.412  47.014  32.665  74.817  25.663  127.465 16.158  35.156  5.769   22.555  76.793  16.962
+1       3       5.896   3.297   34.569  6.303   30.592  10.88   128.906 17.53   34.24   11.353  133.234 25.614  22.971  9.993   72.814  16.301
+1       4       9.162   32.8    3.443   4.66    9.008   162.259 9.636   7.005   9.189   171.349 12.724  11.179  4.668   103.097 5.409   8.904
+1       5       0.978   49.086  0.0     0.0     2.766   181.392 0.894   2.856   4.285   191.227 2.714   6.215   1.651   119.473 0.956   0.0
+1       6       28.889  9.058   8.247   3.871   86.045  42.738  31.844  27.282  79.949  85.394  24.955  14.143  90.75   6.273   11.548  13.508
+1       7       0.982   32.987  11.66   4.435   6.433   111.387 32.628  37.461  2.428   128.432 25.786  47.795  2.973   75.859  33.547  9.7
+1       8       5.349   30.795  6.829   7.091   12.72   140.802 6.945   27.441  3.517   184.98  2.553   13.391  13.851  75.203  1.99    31.036
+1       9       32.145  3.756   4.257   9.906   105.614 4.9     5.588   71.806  62.044  0.0     1.825   140.573 90.557  6.411   9.253   15.858
+1       10      4.347   0.96    41.765  2.993   16.175  3.973   160.004 7.757   30.867  4.948   156.777 11.848  8.127   2.634   110.505 0.813
+1       11      12.153  5.595   30.478  1.838   42.804  34.32   108.901 1.884   19.485  56.544  122.608 5.804   42.443  11.659  67.08   0.898
+1       12      6.931   1.252   19.651  22.231  22.838  20.262  65.644  79.164  30.575  23.224  28.882  121.759 14.724  9.482   52.848  45.025
+1       13      0.0     0.0     49.09   0.974   3.959   0.984   181.055 1.911   2.12    0.0     201.63  0.691   4.542   0.71    116.827 0.0
+1       14      0.0     3.922   44.171  1.97    5.694   12.446  163.381 6.388   7.921   10.199  174.471 11.85   11.415  5.718   101.964 2.982
+1       15      4.604   34.687  1.445   9.328   17.777  128.456 9.394   32.281  27.489  128.065 10.184  38.703  10.896  87.842  2.504   20.837
+1       16      13.263  6.624   25.482  4.696   48.456  34.617  83.342  21.494  35.184  64.533  73.235  31.488  45.935  10.594  55.67   9.88
+1       17      5.814   29.259  12.264  2.728   32.597  86.941  59.262  9.109   50.998  57.05   73.721  22.672  9.807   65.205  42.584  4.483
+1       18      1.984   16.306  7.949   23.826  28.228  82.675  18.269  58.737  24.722  67.054  50.55   62.114  13.52   56.546  8.132   43.881
+1       19      16.3    18.786  10.468  4.51    58.719  51.556  50.128  27.505  67.778  48.922  61.36   26.38   46.461  25.505  46.266  3.847
+1       20      19.031  8.518   13.197  9.319   32.509  48.132  64.849  42.418  55.561  39.939  83.605  25.335  16.286  33.985  42.554  29.254
+2       3       20.282  2.336   40.318  9.206   34.843  9.54    127.182 32.167  26.217  16.338  94.81   15.588  12.356  7.31    107.214 8.786
+2       4       1.667   57.328  6.931   6.216   4.462   177.679 10.893  10.698  14.289  125.35  6.907   6.407   11.609  109.149 6.481   8.427
+...
+
+
+Where the first line contains the name of TF, in above example we are showing the
+DWT flat file for CTCF. Second line serves as a header, with the 1st position and
+2nd position, followed by 16 possible dinucleotides.
+NOTE: the order of the dinucleotides in the second file must be kept the same as
+above.
+
+Next lines, show the dinucleotide frequencies at each pairs of positions. For instance,
+the third line shows the dinculeotides frequencies at position 1 and 2. There are in
+total N*(N-1)/2 lines that encode the dinucleotide frequencies at each pairs of position
+for a binding site of length N. For instance, for CTCF, which the length of site is 20,
+there are 190 lines in the DWT flat file.
+
+For generating a DWT flat file, from a set of aligned sequences see 'generate_DWT_model.py'
+in the current directory or section 3 of the current manual.
+
+
+
+1.1.1. Where to find DWT flat files
+We have made DWT flat files for 78 human TFs, which can be found at: 
+http://crunch.unibas.ch/DWT/table.html 
+
+In addition to the DWT flat files, one can obtain the diLogo (generated from the DWT 
+flat files), WM logos and enrichment scores for each of the models (see the DWT paper).
+
+
+
+1.2. DNA FASTA file
+The DNA FASTA provides the program with the set of DNA sequences that will be searched 
+for TFBS. The format of the FASTA file, with a slight change from the standard FASTA is 
+given as the following example: 
+
+>hg19_chr9_100273500_100273596_reg1000903.p2_15.004990099_+
+TCAAACACTATGTTTAGTGTGTTTGTTTTTTTAGAAGGTACTTTCCCATATGACTAAGAGAATGAAATCAGCCAGTGAAAATAACTGCAAATGAGCC
+>hg19_chr14_68742559_68742620_reg1000593.p3.rep2_16.3893413174_+
+CCTTGAATTCTCAGCTGACATGTTATTTCTATTTTTTTGTCCTTACTGCAAGAACCTGTCCT
+>hg19_chr2_70369921_70370101_reg1000153.p3_39.9191521197_+
+GGCTGCGCAGGAGGCATTGGCAACTGAGCGTCCTGCGGCGCCGCCTGGTGGAAGCAAAGCAGCCGAGCCCCCCGGAAGCGGCGGCGCGGGCGAGTGGAGAACGTGACTTACGTCATCTGGCGGAGGCGTGGGGGCGGCTGCCGCGTGACCAGCCCCAGCCAGGCGCGGTCGGCGCGTTTCT
+...
+
+
+Here the DNA sequences must be gap-less. If a letter 'N' is inside the sequence, the program
+skips all the sites that are overlapping the 'N' letter.
+
+Note that the DNA sequences in the FASTA file need to be given as a whole, not several lines 
+separated with '\n' (new line) or white space characters. 
+
+
+
+1.3 Parameter file
+Input parameter file, which sets parameters for the DWT program. The name of each parameter 
+is preceded by '#' character. Example below, demonstrates the contant of a parameter file:
+
+#background
+A       0.25
+C       0.25
+G       0.25
+T       0.25
+
+#output_file
+results.txt
+
+The 'background' parameter specifies the background nucleotide probabilities, independent 
+of their position. This is used to calculate the likelihood of each binding site under the 
+background model. In above, a uniform background is given (each nucleotide is equally likely)
+, but based on the usage, user can change the background frequencies. However, user needs to 
+make sure that the probabilities are normalized (sum of them is equal to 1).
+
+The output_file option, provides the name of the output file where the results of DWT program
+will be copied in. If the file is already exist, the content will be re-written, otherwise 
+a new file with the 'results.txt' will be created in the current working directory. 
+
+
+
+2. Output file
+The output file, after running the DWT program, will contain following information:
+
+>hg19_chr9_100273500_100273596_reg1000903.p2_15.004990099_+     0       20      +       CTCF    CCTTGAATTCTCAGCTGACA    -15.9948
+>hg19_chr9_100273500_100273596_reg1000903.p2_15.004990099_+     0       20      -       CTCF    TGTCAGCTGAGAATTCAAGG    -4.6522
+>hg19_chr9_100273500_100273596_reg1000903.p2_15.004990099_+     1       21      +       CTCF    CTTGAATTCTCAGCTGACAT    -12.3138
+>hg19_chr9_100273500_100273596_reg1000903.p2_15.004990099_+     1       21      -       CTCF    ATGTCAGCTGAGAATTCAAG    -3.8257
+>hg19_chr9_100273500_100273596_reg1000903.p2_15.004990099_+     2       22      +       CTCF    TTGAATTCTCAGCTGACATG    -13.3190
+>hg19_chr9_100273500_100273596_reg1000903.p2_15.004990099_+     2       22      -       CTCF    CATGTCAGCTGAGAATTCAA    -14.4652
+>hg19_chr9_100273500_100273596_reg1000903.p2_15.004990099_+     3       23      +       CTCF    TGAATTCTCAGCTGACATGT    -8.0776
+>hg19_chr9_100273500_100273596_reg1000903.p2_15.004990099_+     3       23      -       CTCF    ACATGTCAGCTGAGAATTCA    -15.9692
+>hg19_chr9_100273500_100273596_reg1000903.p2_15.004990099_+     4       24      +       CTCF    GAATTCTCAGCTGACATGTT    -5.8385
+>hg19_chr9_100273500_100273596_reg1000903.p2_15.004990099_+     4       24      -       CTCF    AACATGTCAGCTGAGAATTC    -7.8037
+>hg19_chr9_100273500_100273596_reg1000903.p2_15.004990099_+     5       25      +       CTCF    AATTCTCAGCTGACATGTTA    -14.4202
+>hg19_chr9_100273500_100273596_reg1000903.p2_15.004990099_+     5       25      -       CTCF    TAACATGTCAGCTGAGAATT    -14.3011
+>hg19_chr9_100273500_100273596_reg1000903.p2_15.004990099_+     6       26      +       CTCF    ATTCTCAGCTGACATGTTAT    -19.2765
+>hg19_chr9_100273500_100273596_reg1000903.p2_15.004990099_+     6       26      -       CTCF    ATAACATGTCAGCTGAGAAT    -15.2481
+>hg19_chr9_100273500_100273596_reg1000903.p2_15.004990099_+     7       27      +       CTCF    TTCTCAGCTGACATGTTATT    -13.0199
+>hg19_chr9_100273500_100273596_reg1000903.p2_15.004990099_+     7       27      -       CTCF    AATAACATGTCAGCTGAGAA    -11.8477
+>hg19_chr9_100273500_100273596_reg1000903.p2_15.004990099_+     8       28      +       CTCF    TCTCAGCTGACATGTTATTT    -6.9871
+>hg19_chr9_100273500_100273596_reg1000903.p2_15.004990099_+     8       28      -       CTCF    AAATAACATGTCAGCTGAGA    -11.9803
+>hg19_chr9_100273500_100273596_reg1000903.p2_15.004990099_+     9       29      +       CTCF    CTCAGCTGACATGTTATTTC    -15.7468
+>hg19_chr9_100273500_100273596_reg1000903.p2_15.004990099_+     9       29      -       CTCF    GAAATAACATGTCAGCTGAG    -13.5692
+>hg19_chr9_100273500_100273596_reg1000903.p2_15.004990099_+     10      30      +       CTCF    TCAGCTGACATGTTATTTCT    -12.8781
+>hg19_chr9_100273500_100273596_reg1000903.p2_15.004990099_+     10      30      -       CTCF    AGAAATAACATGTCAGCTGA    -10.1037
+>hg19_chr9_100273500_100273596_reg1000903.p2_15.004990099_+     11      31      +       CTCF    CAGCTGACATGTTATTTCTA    -10.7539
+...
+
+
+Each line is designated to show the DWT score for each site. This information is separated by TAB. 
+First column is the sequence IDs as in the input FASTA file, the next two columns indicate the start
+and the end of the site within the DNA sequence. It then follows by the strand information:
++ for forward (positive) strand and - for reverse (negative) strand. 
+The name of the TF, which is obtained from the first line of the DWT flat file, the sequence of the site,
+and finally the DWT score. 
+The DWT score is calculated according the the Log(P(s|DWT) / P(s|BG)), which is the log-likelihood ratio
+of the sequence being generated under the DWT model or a background model. In this work we use the 
+order zero Markov Chain model as the background model, i.e., the probability of each nucleotide is 
+independent from its adjacent position. 
+
+
+3. Contact and credits
+The DWT model is developed in C++ by Saeed Omidi and Erik van Nimwegen.
+For citing our work, please check out our website: 
+http://nimwegenlab.org/
+
+Source code repository: 
+https://github.com/omidi/DWT-model
+
+email address:
+saeed.omidi@gmail.com
+erik.vannimwegen@unibas.ch
+
+connecting to us on Twitter: 
+@NimwegenLab
+@SaeedOmidi
+
+Physical address:
+Core program Computational and Systems Biology
+Biozentrum, University of Basel
+Klingelbergstrasse 50-70
+4056 Basel, Switzerland
+
+

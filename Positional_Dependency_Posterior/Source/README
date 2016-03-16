@@ -1,0 +1,32 @@
+
+This directory contains the source code for calculating the posterior of dependency between 
+every pairs of binding positions.
+See the '../Examples' directory and '../manual.txt' file for how to run the program. 
+
+
+Prerequisite:
+	The program uses some functions from the Boost library. We have put a version of the Boost
+	library in '../../lib/boost_1_41_0'. The library is compressed, so first it is required to 
+	uncompress the library. For that, go to '../../lib/boost_1_41_0' and run:
+
+	tar -xvf boost_1_41_0.tar.gz
+
+	NOTE: if the Boost library is already uncompressed, this step is not necessary. 
+
+
+
+Compiling: 
+	Under Linux one simply has to type 'make' in this directory to compile
+	the code. This should produce an executable file, which is called:
+	positional_dependency_posterior
+
+
+
+Final note:
+      This should probably also work under MACOS. Under windows you will
+      need to know how to compile C and C++ source-code in order to get
+      DWT_TFBS_prediction to run. Note, the code uses only standard libraries 
+      as far as we are aware. We use the GNU C++ compiler (g++) to compile the 
+      code. If you have another C++ compiler, please replace the corresponding 
+      commands in the MakeFile.
+
