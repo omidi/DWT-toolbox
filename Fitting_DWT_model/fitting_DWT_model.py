@@ -6,6 +6,7 @@ import math
 import re
 import numpy as np
 from itertools import combinations, product
+from string import upper
 
 
 def arguments():
@@ -92,7 +93,7 @@ def runMotevo(inputSequences, paramFile, WM, DirName, program_dir = ""):
                   WM])
     if run(cmd):
         sys.stderr.write ( "\nError in running MotEvo\n")
-        print 'Program exists! '
+        print 'Program halts! '
         exit()
     run('rm wms.updated')
     return 0
@@ -151,6 +152,7 @@ def copyWM(args, TF, program_dir=''):
 
 def process_motevo_output(args):
     site_file = os.path.join(args.output_dir, 'sites')
+    alg = []
     with open(os.path.join(args.output_dir, 'alg_1'), 'w') as outf:
         with open(site_file) as inf:
             while True:
@@ -159,7 +161,8 @@ def process_motevo_output(args):
                     break
                 line2 = inf.readline()
                 outf.write('%s\t%s\n' % (line2.split()[0], line1.split()[2]))
-    return os.path.join(args.output_dir, 'alg_1')
+                alg.append( (line2.split()[0], float(line1.split()[2])) )
+    return os.path.join(args.output_dir, 'alg_1'), alg
 
 
 def pairwise_frequencies(sequences, length):
@@ -259,8 +262,8 @@ def DWT_param_file(args, res_filename):
     return fname
 
 
-def run_DWT_model(param_file, dwt_file, args):
-    prog = '../../DWT_model/Source/DWT_TFBS_prediction'
+def run_DWT_model(param_file, dwt_file, args, program_dir):
+    prog = os.path.join(program_dir, '../DWT_model/Source/DWT_TFBS_prediction')
     cmd = '%s %s %s %s' % (prog, dwt_file, args.fasta_file, param_file)
     if run(cmd):
          sys.stderr.write ( "\nError in running the DWT model\n" )
@@ -269,29 +272,40 @@ def run_DWT_model(param_file, dwt_file, args):
          exit()
     return 0
 
+def pr(s_i, s_0):
+    return np.exp(s_i - s_0) / (1 + np.exp(s_i - s_0))
 
-def find_cutoff(S, fname):
+def find_cutoff(S):
     def likelihood(S, s_0):
         sum = 0.
         for s in S:
             sum += math.log(1 + math.exp(s - s_0))
         sum -= len(S)*math.log(1+math.exp(-1*s_0))
         return sum
-    f = open(fname, 'w')
     s0_range = [-10., 30.]
     s_0 = s0_range[0]
     fitted_s_0 = s_0
     max = likelihood(S,s_0)
-    f.write('%f\t%f\n' % (s_0, max))
     for i in xrange(int(math.ceil((s0_range[1]-s0_range[0])/0.1))):
         s_0 += .1
         tmp = likelihood(S,s_0)
-        f.write('%f\t%f\n' % (s_0, tmp))
         if tmp > max:
             max = tmp
             fitted_s_0 = s_0
-    f.flush()
     return fitted_s_0
+
+def freq_matrix_4D(alg):
+    """returns a matrix of the letter frequences"""
+    matrix = {}
+    for seq in alg:
+        for pos in combinations(xrange(len(alg[0][0])), 2):
+            matrix.setdefault(pos, {})
+            for pairs in product('ACGT', repeat=2):  matrix[pos].setdefault(pairs, 0.)
+            try:
+                matrix[pos][(upper(seq[0][pos[0]]), upper(seq[0][pos[1]]))] += seq[1]
+            except KeyError:
+                continue
+    return matrix
 
 
 def difference(alg1, alg2=None):
@@ -310,6 +324,51 @@ def difference(alg1, alg2=None):
     return sum
 
 
+def make_alignment(dwt_res_file, args, s_0=None, iteration=0):
+    if s_0 is None:
+        scores = [float(a_line.split()[-1]) for a_line in open(dwt_res_file)]
+        s_0 = find_cutoff(scores)
+        del(scores)
+    # print "s0 is: ", s_0
+    alg = []
+    for line in open(dwt_res_file):
+        if pr(float(line.split()[-1]), s_0) > args.min_post:
+            alg.append((line.split()[-2], pr(float(line.split()[-1]), s_0)))
+    alg_file = os.path.join(args.output_dir, 'alg_%d' % iteration)
+    with open(alg_file, 'w') as outf:
+        for rec in alg:
+            outf.write('%s\t%f\n' % (rec[0], rec[1]))
+    # print "Number of sequences in the alignment file is %d" % len(alg)
+    return alg, s_0, alg_file
+
+
+def clean_up_directory(args, last_iteration, TF):
+    curr_dir = os.getcwd()
+    os.chdir(args.output_dir)
+    run('mkdir intermediate_results')
+    run('mv * intermediate_results/.')
+    run('cp intermediate_results/dwt_%d %s.dwt' % (last_iteration, TF))
+    run('cp intermediate_results/alg_%d %s.alg' % (last_iteration, TF))
+    os.chdir(curr_dir)
+    return 0
+
+
+def calculate_PS_posterior(args, TF, program_dir=''):
+    prog = os.path.join(program_dir, '../Positional_Dependency_Posterior/Source/positional_dependency_posterior')
+    cmd = ' '.join([
+        prog,
+        os.path.join(args.output_dir,'%s.dwt' % TF),
+        '>',
+        os.path.join(args.output_dir,'%s.post' % TF),
+    ])
+    if run(cmd):
+         sys.stderr.write ( "\nError in calculating positional dependencies\n" )
+         print "command: %s" % cmd
+         print 'Program halts!\n'
+         exit()
+    return 0
+
+
 def main():
     args =arguments()
     mkdir(args.output_dir)
@@ -323,15 +382,28 @@ def main():
         args.background = background_model(args.fasta_file)
     else:
         args.background = {'A':0.25, 'C':0.25, 'G':0.25, 'T':0.25}
+    iteration = 1
     copyWM(args, TF, program_dir)
-    alg_file = process_motevo_output(args)
+    alg_file, alg_1 = process_motevo_output(args)
+    print "number of identified TFBS in iteration 1 is %d" % len(alg_1)
+    print "*****************************"
     dwt_file = generate_DWT(alg_file, TF)
     dwt_results = os.path.join(args.output_dir, 'DWT_results')
     dwt_param_file = DWT_param_file(args, dwt_results)
-    run_DWT_model(dwt_param_file, dwt_file, args)
-
-
-
+    diff = 100
+    while diff > 0.01:
+        iteration += 1
+        run_DWT_model(dwt_param_file, dwt_file, args, program_dir)
+        alg_2, s0, alg_file2 = make_alignment(dwt_results, args, iteration=iteration)
+        dwt_file = generate_DWT(alg_file2, TF)
+        diff = difference(alg_1, alg_2)
+        print "difference at round %i is %f" % (iteration, diff)
+        print "number of identified TFBS in this iteration is %d" % len(alg_2)
+        print "*****************************"
+        alg_1 = alg_2
+        alg_2 = None
+    clean_up_directory(args, 12, TF)
+    calculate_PS_posterior(args, TF, program_dir)
 
 if __name__ == '__main__':
         main()
