@@ -1,0 +1,22 @@
+
+This directory contains the MotEvo source code.
+motevo.c = The MotEvo source code.
+
+runUFE.cpp
+evomodel.cpp
+evomodel.h = Source code for the UFE-file creation.
+
+Under Linux one simply has to type 'make' in this directory to compile
+the code. This should produce two executables:
+motevo
+runUFE
+
+This should probably also work under MACOS. Under windows you will
+need to know how to compile C and C++ source-code in order to get
+MotEvo to run. Note, the code uses only standard libraries as far as we are
+aware. We use the GNU C++ compiler (g++) to compile the code. If you
+have another C++ compiler, please replace the corresponding commands
+in the MakeFile.
+
+
+

@@ -1,0 +1,641 @@
+MotEvo: Integrated Bayesian probabilistic methods for  inferring
+regulatory sites and motifs on multiple alignments of DNA sequences 
+********************************************************************
+
+CONTENTS:
+
+0. Compiling MotEvo
+1. Input files and their format
+   1.1 Multiple sequence alignments.
+       1.1.1 How do I obtain multiple alignments? 
+   1.2 Species tree.
+       1.2.1 Where do I obtain a species tree?
+   1.3 Positional weight matrices
+2. Running modes and their parameters
+   2.0 General options and parameters
+   2.1 TFBS: Predicting transcription factor binding sites
+       2.1.1 Parameters for TFBS prediction
+   2.2 WMREF: Weight matrix refinement
+       2.2.1 Parameters for WM refinement.
+   2.3 ENH: Predicting enhancers
+       2.3.1 Parameters for predicting enhancers
+3. Output files
+   3.1 Predicted transcription factor binding sites (TFBSs).
+   3.2 Priors for all weight matrices.
+   3.3 Refined weight matrices.
+   3.4 Enhancer prediction results.
+4. Creating UFE model files.
+5. Contact and credits.
+
+********************************************************************* 
+
+
+0. Compiling
+
+Under Linux, you can use the provided Makefile to compile MotEvo and the 
+UFE model. Simply type 'make'.
+
+If you prefer to do it manually, you first have to create the UFE model by
+g++ -O3 -c evomodel.cpp  
+g++ -O3 -c runUFE.cpp
+g++ -O3 runUFE.o evomodel.o -o runUFE
+
+To compile MotEvo, simply type:
+g++ -O3 motevo.c -o motevo
+
+Note, this should also work under MACOS. Second note: we use the GNU
+C++ compiler g++. You can of course use another C++ compiler. Under
+Windows you will need to know how to compile C++ source code
+yourself. 
+
+This compiling will create two executable binaries called 'motevo' and 'runUFE'. 
+The code uses only standard libraries so in principle this should compile 
+without problems under most operating systems. If you experience problems
+compiling, please contact us (see contact information below).
+
+1. INPUT FILES AND THEIR FORMAT
+
+MotEvo needs three input files to run: 
+       - A file that contains (multiply-aligned) sequences.
+       - A parameter file.
+       - A file that contains a set of positional weight matrices
+       (note: this file can in principle be an empty file).
+
+1.1 Multiple sequence alignments.
+
+One input file contains the sequences that MotEvo runs on. In general
+this file contains multiple sequence alignments in the following
+FASTA-like format. 
+
+Example of the multiple alignment format:
+>>hg18_chr7_1241423_1241946_+
+CCAAGTAC---GGCTCCCC-AGGCC-CTTCCGG-ACG-AGAAGC-ACCCATA-T---------TT-CCCTTCA
+>rheMac2_chr6_73853854_73854374_-
+CGCAGATCACTGTATTAACCTCTCC-GCTCTG------------------------TCAACCG-T-GGCTTTA
+>mm9_chr5_139799730_139800231_+
+CCAAGTTC---GGCTTCAC-AGGCC-CTTCTTG-AGGAAGAAGT-AACCAGA-T---------TT-CCCTTCA
+
+>>hg18_chr7_100263950_100264352_+
+AGC--TGG-------G-CATGGTGGCG-CG----------CGCC-TGTAATCCTAGCT-----ACTCG-GGAG
+>rheMac2_chr3_48125114_48125516_+
+------------------------------CTGGGCACG-GT--------GGCGCGCGCCTGTAATCCT--AG
+>mm9_chr5_137579005_137579392_-
+GGGTATGGAGAGCTTCCCAACAGACCTCCG----TTCCTCAAGC-AATAATCCCAGCTTGTCTATCTCCGGAG
+>canFam2_chr6_11928830_11929223_-
+--------------------CGGGCCT-CC----------AGGC-AGCGACCCTAGCTTAGATGATCCTGGAG
+
+In this example there are two multiply aligned regions with
+orthologous sequences. Like in the FASTA format, each sequence has two
+lines associated with it. One line, which starts with either ">" or
+">>" has the name of the sequence, and the line immediately following
+this has the sequence and gap pattern. The start of each new multiple
+alignment of orthologous sequences is indicated by giving the first
+sequence a ">>" mark instead of ">". 
+IMPORTANT: The evolutionary model employed by MotEvo explicitly uses
+the phylogenetic tree relating the species and MotEvo thus needs to
+know which sequence in each multiple alignment came from which
+species in the phylogenetic tree. Therefore, on the name line of each
+species there should be one and only one occurrence of a 'species
+name' that also appears in the phylogenetic tree (which is specified
+in the parameter file). In the two multiple alignments above these
+species names are, hg18, rheMac2, and mm9, indicating that the
+sequences come from the human genome (version 18), the rhesus macaque
+genome (version 2), and the mouse genome (version 9). The other parts
+of the name indicate the regions in the genome from which the
+sequences stem but these can be anything the user chooses.
+Note: For clarity we put an empty line between the two
+alignments. This is not necessary for input files used by MotEvo.
+Note: Each multiple alignment MUST have a sequence from the reference
+species. In general it is most intuitive to start each multiple
+alignment with the reference species (in this case hg18).
+
+
+For input files with sequences from a single species the format is as follows:
+
+>>hg18_chr7_1241423_1241946_+
+CCAAGTACGCTCCCCAGGCCCTTCCGGACGAGAAGCACCCATATTTCCCTTCA
+
+>>hg18_chr7_100263950_100264352_+
+AGCTGGGCATGGTGGCGCGGCCTGTAATCCTAGCTACTCGGGAG
+
+
+Note: There are no gaps when using sequences from a single species and
+each sequence starts with ">>". 
+Note: MotEvo in principle allows for non-standard base letters such as N
+(any base), S (C or G), W (A or T), and so on.
+
+1.1.1 How do I obtain multiple alignments? 
+
+We assume you are already in possession of the sequences from the
+reference species on which you want to run MotEvo. What to do if your
+sequences are from an unknown genome (like meta-genomic sequences)
+falls outside the scope of this manual (finding orthologous sequences
+is highly nontrivial in that case).
+
+Obtaining orthologous sequences:
+To obtain the orthologous regions of your sequences in other genomes
+we suggest you use the pairwise genome alignments that are provided
+by a number of resources on the web. These include:
+UCSC database (http://hgdownload.cse.ucsc.edu/downloads.html).
+ENSEMBL database (http://www.ensembl.org/info/docs/compara/analyses.html).
+
+These provide pairwise alignments for most available multi-cellular
+organisms.
+
+Obtaining alignments:
+Once you have obtained orthologous regions for all your sequences you
+need to multiply align them. To this end we typically use the T-Coffee
+software that can be obtained from: http://tcoffee.crg.cat/.
+We typically use the following simple command line:
+t_coffee infile -type=dna -outfile=outfile -output fasta_aln
+
+where 'infile' contains the set of orthologous input sequences. The
+additional options we use to indicate the sequences are DNA sequences
+(as opposed to amino acid sequences) and that we want to output in
+FASTA-alignment format. The output multiple-alignments can then
+directly be used with MotEvo. The only thing that needs to be done is
+to add a second '>' to the identifiers of the reference species for
+each multiple alignment.
+
+1.2 Phylogenetic species tree
+
+The phylogenetic tree of all species that occur in at least one of the
+multiple alignments should be given in the parameter file. The format
+of the phylogenetic tree is the standard Newick format
+(http://en.wikipedia.org/wiki/Newick_format). The distances on the
+branches of the tree are defined as the number of expected
+substitutions per neutrally evolving site.
+
+For example, here is reasonable tree for a set of mammalian genomes:
+((((hg18:0.048,rheMac2:0.048):0.143,mm9:0.489):0.030,((canFam2:0.224,equCab1:0.149):0.011,bosTau3:0.246):0.047):0.365,monDom4:0.481);
+
+1.2.1 Where do I obtain a tree for my species?
+
+For sets of mammalian genomes, Drosophila genomes, Saccharomyces
+genomes, and a number of bacterial clades, reasonable phylogenetic
+trees are provided in the directory 'trees'.
+
+These species trees were generally obtained using the procedures described in:
+Molina and van Nimwegen, Genome Res. 2008 Jan;18(1):148-60. Epub 2007
+Nov 21. PMID:18032729 
+
+MotEvo's results are not highly sensitive to the tree. If you need a
+tree for another set of species, and you would not know how to obtain
+one yourself, then we suggest to look at some web-sites and data-bases
+dedicated to the genomes of these species. These often have trees
+available. You might also want to play with rescaling the length of
+the branches. Keep in mind that distances are often given in terms of
+number of substitutions at the amino acid level as opposed to number
+of substitutions at neutrally evolving sites (which is what MotEvo
+uses). 
+
+1.3 Positional weight matrices
+
+The position-specific weight matrices that MotEvo uses as input (and
+produces as output when doing WM refinement) are provided in a
+TRANSFAC-like format. Below is an example of a single WM:
+//
+NA name_of_wm
+PW 7
+PO      A       C       G       T
+1       0       0       0       10
+2       0       0       0       10
+3       0       0       0       10
+4       0       4       6       0
+5       0       2       8       0
+//
+
+This WM has length 5. The counts on each line indicate the number of
+known sites for the motif that have an A, C, G, and T at this position
+respectively. MotEvo will use the counts, automatically add
+pseudo-counts, and normalize, to obtain probabilities (that is you do
+NOT need to add pseudo-counts yourself). In this example 4 of the 10
+known sites have a C at position 4, and the other 6 have a G at this
+position.
+
+Note: The input WM file can have an arbitrary number of WMs in it.
+Note: To control the prior weight assigned to each WM you can specify
+a prior weight by adding a line:
+PW weight
+For example, in the above example a weight of 7 is assigned to this
+WM. These weights are transformed into prior probabilities as
+follows. The settings of the parameter file determine the total prior
+probability that is assigned to ALL WMs combined in the input WM
+file. By default this prior probability is divided equally among all
+WMs. However, when PW values are specified for each WM the prior
+probability is distributed across the WMs in proportion to the PW
+value. In this way the user can control the precise prior
+probabilities of all WMs.
+
+2. RUNNING MODES
+
+Given input files with multiple sequence alignments and a set of
+weight matrices (WMs) representing the binding specificities of a set
+of TFs, MotEvo can essentially be run in 3 different modes:
+
+     1. Predicting transcription factor binding sites (TFBSs). Here
+     MotEvo predicts where in the input sequences TFBSs occur for each
+     of the input WMs.
+
+     2. WM refinement. Here MotEvo uses the input sequences (which are
+     assumed to contain TFBSs for the input WMs) to improve the input
+     WMs into versions that better explain the observed data.
+
+     3. Enhancer prediction. Here MotEvo predicts where in the input
+     sequences significant clusters of TFBSs for the input WMs occur
+     (these may correspond to cis-regulatory modules/enhancers).
+
+
+2.0 GENERAL PARAMETERS 
+
+There are a number of parameters that are used independently of the
+running mode used. We describe these in turn. The general form of the
+parameter file is that each line starts with the name of a parameter,
+followed by a space, followed by the value of the
+parameter. Parameters that have to be specified for every MotEvo run
+are indicated with the word 'REQUIRED'.
+     
+     -refspecies (REQUIRED): The name of the species that is
+     considered the reference. That is, MotEvo will make predictions
+     for TFBSs/WMs/enhancers with respect to this reference
+     species. The name should match exactly one of the species names
+     in the tree.
+
+     -TREE (REQUIRED): The phylogenetic tree (in Newick format)
+     relating the species from which the sequences in the input
+     alignments stem. All species occurring in any of the input
+     multiple alignments should occur in this tree. The branch lengths
+     correspond to the expected number of substitutions per neutrally
+     evolving site.
+
+     -restrictparses: zero or one. When set to one, MotEvo will not
+      consider binding site configurations where a site occurs at a
+      position that has higher score for the background than for the
+      WM. By default this variable is set to zero and one would rarely
+      need to use this variable (it is essentially only used for
+      certain testing purposes).
+
+
+     BACKGROUND RELATED PARAMETERS
+ 
+     -markovorderBG (REQUIRED): The order of the background model,
+     i.e. the number of upstream nucleotides that the current
+     nucleotide depends on in the background model. In the simplest
+     case this parameter is set to '0' (zeroth order) and the
+     probabilities for an A, C, G, or T to occur are independent of
+     the preceding nucleotides.
+
+     -bg A (and bg C, bg G, and bg T): These are used when the simple
+     bg model with order zero is used. They give the probabilities for
+     A, C, G, and T to occur. If these parameters are not provided
+     MotEvo will estimate the background probabilities from the input
+     sequences (assuming all input is background).
+
+     -mybgfile: When this parameter is specified MotEvo obtains the
+     background model parameters from the file as opposed to
+     estimating them from the input sequences. The file should consist
+     of lines of the form:
+     X1X2...XkY value
+     where X1, X2, X3, ..., Xk, and Y are all nucleotides and 'value'
+     is a probability. This value corresponds to the probability of
+     observing nucleotide Y given that the previous k nucleotides are
+     X1 through Xk, i.e. P(Y|X1,X2,..,Xk). The nucleotides and the
+     values should be separated by a tab. Example
+     ATCG 0.1
+     means that there is probability 0.1 for a G to occur given that
+     the previous nucleotides are ATC. 
+     
+
+     PRIOR RELATED PARAMETERS 
+
+     -bgprior: The a priori probability for background columns. MotEvo
+     assigns prior probabilities to binding site configurations which
+     are proportional to the product of, for each WM type, the prior
+     of the WM to the power of the number of sites in the
+     configuration. This parameter gives the prior for the
+     background. It controls the a priori density of TFBSs that is
+     expected in the following way. When the bgprior is set to p,
+     MotEvo will divide the remaining probability (1-p) among the UFE
+     and all input WMs.
+
+     -UFEwmprior: The prior for the UFE model relative to the other
+     (non-bg) WMs. Given a bgprior of p, the remaining probability
+     (1-p) is divided among the other WMs and the UFE. This parameter
+     controls how much weight the UFE gets relative to the other
+     WMs. That is, if this parameter is set to 100 it implies that a
+     site for the UFE is a priori 100 times as likely as a site for a
+     given known WM. To give an example, for human there are about
+     2000 TFs and we may estimate anywhere from 400-1000 individual
+     motifs. Given roughly 200 known motifs, this implies there are
+     800 unknown motifs. This would imply the UFE has to be roughly
+     set to 200-800. Note: To turn off the UFE model altogether,
+     simply set this parameter to zero. Note: The weights of the
+     individual WMs can be controlled through the input WM file. By
+     adding, for each WM, a field 'PW' that specifies the prior weight
+     of the WM.
+
+     -EMprior: either 0 (off) or 1 (on). When set to 1 MotEvo will use
+     expectation maximization to estimate all prior probabilities
+     (including those for the UFE and background model) that maximize
+     the probability of the input data. Note: In all models except for
+     enhancer finding a single set of priors for the entire input data
+     is estimated. In the enhancer finding mode a set of priors is
+     estimated separately for each window.  
+     -priordiff: A convergence criterium for fitting the priors. When this 
+     quantitity is set to 0.01 it means that priors are considered 
+     converged when they change by less than 1% from one iteration to 
+     the next. 
+     Note: During iteration, those priors that become so small that they
+     correspond to less than 1 expected site in the entire input are
+     set to be stricly zero.
+
+     priordiff: Typically a small real number (e.g. 0.01). This
+     parameter sets the cut-off for the expectation-maximization
+     iteration of the priors. That is, when this parameter is set to
+     0.01 the prior updating is considered converged when the priors
+     change by less than 1% from one iteration to the next.
+
+
+     UFE RELATED PARAMETERS
+
+     UFEwmfile: A file containing the pre-calculated values for the
+     probability of each possible alignment column under the UFE
+     model. IMPORTANT: These probabilities depend on both the
+     phylogenetic tree and the background probabilities b_A, b_C, b_G,
+     and b_T. It is important that this UFE file was generated using
+     the exact same phylogenetic tree and background probabilities as
+     used in the current run. Note: The UFEwmfile can be generated
+     using the provided executable runUFE. The user needs to specify a
+     tree in Newick format as well as the base frequencies for A, C,
+     G, and T (see 4. for a description).
+
+     UFEwmlen: The length of UFE sites. This is typically set to a
+     value corresponding to the typical length of a TFBS, e.g. 10 for
+     eukaryotes. Note: When running with a single WM one typically
+     sets the UFE length to the same as the WM length.
+
+     UFEprint: zero or one. When set to one the UFE sites are printed
+     in the site file (default). There are typically many UFE sites
+     and when the user is only interested in sites for the given WMs,
+     setting this value zero avoids printing the UFE sites in the site
+     file. 
+
+     UFEwmproffile: Name of an output file reporting UFE site
+     probabilities at each position. When this parameter is provided
+     MotEvo will create a file that reports, for every position in the
+     input sequences, the probability that an UFE site occurs at this
+     position. Note: When using this parameter together with an empty
+     input WM file, MotEvo produces profiles across the sequences that
+     quantify the evidence that purifying selection is acting at each
+     position (i.e. similar to phastcons profiles).
+
+
+2.1 TFBS: Predicting transcription factor binding sites 
+
+To run MotEvo to predict TFBSs on the input data, the parameter 'Mode'
+in the parameter file needs to be set to TFBS, i.e.  
+Mode: TFBS 
+
+      2.1.1 Parameters for TFBS prediction
+      When predicting TFBSs the only additional parameters that needs
+      to be specified beyond the general parameters are related to the
+      output that MotEvo produces.
+      
+      OUTPUT RELATED PARAMETERS
+
+      sitefile: Name of the output file containing the predicted
+      binding sites. NOTE: when this parameter is not specified,
+      MotEvo will simply not report invidual predicted TFBSs.
+      minposterior: Minimal posterior probability for sites to be
+      reported, i.e. predicted TFBSs with posteriors less than this
+      cut-off will not be reported in the output file, e.g. 0.01 when
+      run in a very sensitive setting, and 0.2 when run in a more
+      specific setting.
+
+      priorfile: Name of the output file containing the final priors
+      and site densities. Note: When EMprior=0 this will give the
+      observed posterior densities of sites for the various WMs using
+      the fixed input priors. When EMprior=1 this file will contain
+      the final estimated priors and site densities.
+
+      loglikfile: Name of the output file containing the
+      log-probability of each sequence (or alignment) under the model
+      (i.e. a mixture of background sequence and binding sites). These
+      log-likelihoods of each sequence can be useful when performing
+      model selection analysis (e.g which WMs most help to explain
+      particular input sequences). Note that this parameter is not
+      required. If it is left out log-likelihoods are simply not
+      reported. The output file simply has lines containing the name
+      of the sequence followed by its log-likelihood.
+
+      minposterior: A real number between zero and one. The minimal
+      posterior probability for TFBSs to be reported, i.e. sites with
+      posterior less than this cut-off are not reported in the sites
+      file.
+
+      printsiteals: zero or one. When set to zero MotEvo will not
+      print out the sequence alignments of each site, but will only
+      report position, WM, and posterior of each site.
+
+
+2.2 WMREF: Weight matrix refinement
+To run MotEvo to optimize the WMs using the input sequences, the
+parameter 'Mode' in the parameter file needs to be set to WMREF, i.e
+Mode: WMREF
+
+Note: The refined WMs will be reported in the file wms.updated.
+
+Note: When the sitefile and/or priorfile are defined then MotEvo will
+also report the final predicted TFBSs and site densities with the
+refined WMs.
+
+	2.2.1 Parameters for WM refinement.
+
+	minposteriorWM: Minimal posterior of the TFBSs for inclusion
+	in WM refinement. That is, when constructing a new WM from the
+	predicted TFBSs only sites with a posterior over this cut-off
+	are used. This can help to ensure that the updated WM is not
+	`soiled' by the large number of putative sites with low
+	posterior probability, e.g. setting this parameter to 0.2 or
+	0.5 when only high scoring sites are desired.
+
+	wmdiff: A convergence criterium for fitting the WMs. When this
+        quantitity is set ot 0.01 it means that WMs are considered
+        converged when their entries change by less than 1% from one
+        iteration to the next. 
+	
+
+2.3 ENH: Predicting enhancers.
+
+To run MotEvo to predict the location of enhancers in the input
+sequences, the parameter 'Mode' in the parameter file needs to be set
+to ENH, i.e.  
+Mode: ENH
+
+      2.3.1 Parameters for predicting enhancers
+
+      winlen: Length of the window that is slid across the sequences of
+      the reference species. This length should roughly correspond to
+      the expected length of enhancers (cis-regulatory modules),
+      e.g. 500.
+
+      steplen: The number of base pairs by which the window is moved
+      at each step. When this parameter is set to 1 a putative
+      enhancer window will be considered at every base pair in the
+      input sequences. However, the running time can be considerably
+      reduced without much loss of accuracy by setting this parameter
+      to a higher value, e.g. 100. 
+
+      OUTPUT RELATED PARAMETERS
+
+      CRMfile: Name of the output file containing the results of the
+      enhancer predictions. 
+
+
+3. Output files
+Here we discuss the formats of the output files.
+
+   3.1 Predicted transcription factor binding sites (TFBSs).
+
+   Each predicted site starts with a line that gives the location,
+   posterior, and WM binding the site. The next lines then explicitly
+   show the sequence alignment at the location of the site, including
+   WM-scores for all species that have an orthologous copy of the
+   site. Here is an example:
+   8-43 + 0.261798 ZEB1 hg18_chr7_100302640_100303065_+
+   CACGTG 4.18809 hg18_chr7_100302640_100303065_+
+   CACGTG 4.18809 rheMac2_chr3_48157384_48157809_+
+   CACGTG 4.18809 mm9_chr5_137543847_137544273_-
+   CACGTG 4.18809 canFam2_chr6_11902557_11902937_-
+   CACCTT 6.72233 monDom4_chr2_278815013_278815460_+
+   
+   The first line shows that this site occurs from position 8-43, on
+   the positive strand, in the reference species of the alignment with
+   name hg18_chr7_100302640_100303065_+. This is a site for the WM
+   with name ZEB1, and its posterior probability is 0.261798.
+   That is, this line has the general format:
+   start end strand posterior WM alignment
+
+   The next lines show the local alignment. In this case, besides the
+   reference species (hg18 = human) orthologous sites occur in rheMac2
+   (rhesus macaque), mm9 (mouse), canFam2 (dog), and monDom4
+   (opossum). The second column on each line shows the WM-score for
+   the corresponding sequence. Except for opossum, which has a WM
+   score of 6.72233, all others have a WM score of 4.18809. The
+   general format of these lines is thus:
+   sequence WM-score sequence_name
+   Note:The WM score is the log-likelihood ratio of the probabilities
+   of the sequence under WM and background model.
+
+   3.2 Priors for all weight matrices.
+   This file shows, for each WM (including UFE and background model),
+   the prior, and overall density of sites for this WM.
+   Example:
+   ZEB1			0.000175027     2.06264         0.000866717
+   background           0.9764          11506.6         0.80584
+   UFEwm                0.0233931       275.681         0.193067
+   
+   The format of each line is:
+   WM-name    prior   number_of_sites	density
+   Thus, for ZEB1 the prior is 0.000175027. The total expected number
+   of sites for ZEB1 in all input sequences is 2.06264, and the
+   fraction of all sequence covered by ZEB1 sites is 0.000866717.
+   Note: The prior and density are not the same. For example, the
+   prior for the background in this case is 0.9764 whereas bg
+   nucleotides cover only 0.80584 of the sequences. This is because the
+   other WMs are typically much wider than a single nucleotide so that
+   each occurrence of a site for another WM covers multiple letters in
+   the sequences.
+
+   3.3 Refined weight matrices.
+   After WM refinement MotEvo creates a file with the refined WMs for
+   each of the input WMs. Example:
+   //
+   NA ctcf.drosophila
+   P0 A		C	G	T	cons	inf
+   01 24.587	121.703	38.049	147.730	Y	0.277
+   02 64.221	62.073	149.789	55.985	N	0.102
+   03 77.192	23.695	183.638	47.543	G	0.329	
+   04 21.189	279.442	17.580	13.858	C	1.086
+   05 0.675	329.627	1.766	0.000	C	1.893
+   06 285.398	3.943	27.511	15.216	A	1.199
+   07 4.763	214.712	107.671	4.923	C	0.853
+   08 29.167	213.399	12.362	77.141	C	0.580
+   09 306.994	7.203	11.862	6.009	A	1.463
+   10 1.999	0.000	330.069	0.000	G	1.908
+   11 128.695	0.000	203.373	0.000	G	0.998
+   12 11.642	0.503	190.135	129.787	G	0.790
+   13 0.000	0.000	331.408	0.660	G	1.940
+   14 5.307	2.977	307.830	15.954	G	1.496
+   15 12.319	296.571	4.303	18.875	C	1.326
+   16 176.574	2.438	149.151	3.904	A	0.833
+   17 15.803	168.907	136.747	10.611	S	0.573
+   18 31.752	144.785	33.030	122.502	Y	0.256
+   //
+   Note: The counts on each line correspond to the sum over the
+   posterior of all predicted sites on the input that have the
+   corresponding letter at the corresponding position of the
+   sites, e.g. at position 6 295.711 sites have an A, 3.94 have a C,
+   26.405 have a G, and 18.641 have a T. The last two columns give the
+   consensus sequence and the information content (in bits) at each
+   position. 
+   Note: this format is of course exactly the same as the input
+   WM format, so that output files of refinement can be directly used
+   as input for another run.
+
+   3.4 Enhancer prediction results.
+   The results file of enhancer prediction provides, for every window,
+   an enhancer score. It also provides the estimated prior
+   probabilities for all the input WMs, the UFE, and the background
+   for each window. Here is an example line from an output file:
+   dm3target_9990_10612_20602  9750    10199	 37.833974 0.000786 0.014661	0.019347	0.055090	0.000126 0.000000 0.0119 85 0.741604	0.156402
+   
+   The first field indicates the name of the alignment that this
+   window occurs in. The second field is the starting position of the
+   window in the alignment, and the third field the end position. The
+   fourth field is the enhancer score. The enhancer score is defined
+   as log[P(W|bg,ufe,wms)/P(W|bg,ufe)], i.e the logarithm of the ratios of
+   probability of the multiple alignment of the window W using a
+   combination of bg, UFE model, and the input weight matrices,
+   and the probability when only the UFE model and background are
+   used. The enhancer score is followed by the estimated prior
+   probabilities of all the WMs, the UFE, and the background, for the
+   corresponding window. The order of the WMs is given in the first
+   line of the file (which is a header line). 
+
+  
+4. Creating UFE model files.
+
+To use the UFE model MotEvo needs an input file that calculates, for
+each possible alignment column, the probability under the UFE and
+background model. Importantly, these probabilities should be created
+using the same phylogenetic tree and background probabilities as for
+the MotEvo run. UFE model files can be created using the runUFE code
+that we provide in the source directory. 
+
+Example command:
+runUFE tree.mammals 0.25 0.25 0.25 0.25 > UFEmodel.mammals
+
+Here the tree.mammals is a phylogenetic tree in Newick format (as can
+be found in the 'trees' directory) and the probabilities 0.25 0.25
+0.25 0.25 are the base frequencies in the order A C G T.
+Note: The running time of runUFE increases exponentially with the
+number of species run, i.e running with more than 10 species may
+take a long time to run.
+
+
+5. Contact and credits
+
+MotEvo was developed by Phil Arnold, Ionas Erb, Nacho Molina, and Erik
+van Nimwegen. Please report any problems, bugs, comments, or requests
+for additional functionality to:
+erik.vannimwegen@unibas.ch
+Physical address:
+Core program Computational and Systems Biology
+Biozentrum, University of Basel
+Klingelbergstrasse 50-70
+4056 Basel, Switzerland
+
+
+
+   

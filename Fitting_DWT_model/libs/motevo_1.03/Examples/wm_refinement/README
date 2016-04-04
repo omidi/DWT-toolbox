@@ -1,0 +1,30 @@
+
+In this directory are input files, a parameter file, and output files for an example
+run of MotEvo in its weight matrix refinement mode.
+
+Input files:
+input.ctcf.aln = alignments of 450 regions in the human genome that were found (by ChIP-seq)
+to be bound by the transcription factor CTCF. Aligned with orthologous regions from 6 other
+mammals.
+
+wm_ctcf.org = Original WM for CTCF as obtained in Drosophila.
+
+
+Command:
+../../source/motevo input.ctcf.aln motevoc_params wm_ctcf.org > report
+
+Note: We run with only 1 input WM (CTCF) and the UFE model. The UFE model gets an a prior weight 200 times higher
+than the CTCF WM, and the bg prior is 0.99. In the WM iteration only sites with posterior at least 0.5 are used.
+By default we typically choose the length of the UFE the same as the WM we are refining. 
+
+output files:
+report = Report provided by MotEvo of the parameters it read in, its running mode, etc.
+sites = Final predicted sites using the updated WM.
+priors = Final predicted number of sites and site densities.
+wms.updated = The refined CTCF weight matrix.
+
+Note, for the users information we also include PNG image files of the sequence logos of
+the original and refined WMs:
+ctcf.org.png
+ctcf.refined.png
+

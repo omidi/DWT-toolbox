@@ -1,0 +1,216 @@
+letter A val is 0.290000
+letter T val is 0.290000
+letter G val is 0.210000
+letter C val is 0.210000
+Running in ENH mode
+node 0 name dm3 qval 0.942707 parent dm3_droSim1_
+node 1 name droSim1 qval 0.927743 parent dm3_droSim1_
+node 2 name droYak2 qval 0.901225 parent droYak2_droEre2_
+node 3 name droEre2 qval 0.898526 parent droYak2_droEre2_
+node 4 name droAna3 qval 0.685916 parent droAna3_dm3_droSim1__droYak2_droEre2___
+node 5 name dp4 qval 0.672334 parent dp4_droAna3_dm3_droSim1__droYak2_droEre2____
+node 6 name droWil1 qval 0.585084 parent droWil1_dp4_droAna3_dm3_droSim1__droYak2_droEre2_____
+node 7 name droVir3 qval 0.822012 parent droVir3_droMoj3_
+node 8 name droMoj3 qval 0.774916 parent droVir3_droMoj3_
+node 9 name droGri2 qval 0.747516 parent droGri2_droVir3_droMoj3__
+node 10 name dm3_droSim1_ qval 0.959829 parent dm3_droSim1__droYak2_droEre2__
+node 11 name droYak2_droEre2_ qval 0.947432 parent dm3_droSim1__droYak2_droEre2__
+node 12 name dm3_droSim1__droYak2_droEre2__ qval 0.88692 parent droAna3_dm3_droSim1__droYak2_droEre2___
+node 13 name droAna3_dm3_droSim1__droYak2_droEre2___ qval 0.930531 parent dp4_droAna3_dm3_droSim1__droYak2_droEre2____
+node 14 name dp4_droAna3_dm3_droSim1__droYak2_droEre2____ qval 0.940823 parent droWil1_dp4_droAna3_dm3_droSim1__droYak2_droEre2_____
+node 15 name droVir3_droMoj3_ qval 0.929601 parent droGri2_droVir3_droMoj3__
+node 16 name droWil1_dp4_droAna3_dm3_droSim1__droYak2_droEre2_____ qval 0.980199 parent droWil1_dp4_droAna3_dm3_droSim1__droYak2_droEre2______droGri2_droVir3_droMoj3___
+node 17 name droGri2_droVir3_droMoj3__ qval 0.713909 parent droWil1_dp4_droAna3_dm3_droSim1__droYak2_droEre2______droGri2_droVir3_droMoj3___
+node 18 name droWil1_dp4_droAna3_dm3_droSim1__droYak2_droEre2______droGri2_droVir3_droMoj3___ qval 0 parent (null)
+//
+NA bcd *
+PW 0.000000
+PO         A          C          G          T       cons         inf
+00      9.00      18.00       3.00      18.00          H        0.07
+01      8.00       3.00       1.00      36.00          T        0.73
+02     45.00       1.00       1.00       1.00          A        1.40
+03     47.00       0.00       1.00       0.00          A        1.67
+04      1.00       0.00      16.00      31.00          T        0.78
+05      1.00      44.00       0.00       3.00          C        1.35
+06      2.00      26.00       3.00      17.00          C        0.39
+07      5.00      12.00      18.00      13.00          B       -0.04
+//
+//
+NA cad *
+PW 0.000000
+PO         A          C          G          T       cons         inf
+00      0.00       5.00       3.00       5.00          Y        0.03
+01      2.00       0.00       3.00       8.00          T        0.24
+02      0.00       0.00       0.00      13.00          T        1.50
+03      1.00       0.00       0.00      12.00          T        1.14
+04      6.00       2.00       1.00       4.00          W       -0.13
+05      0.00       4.00       3.00       6.00          Y        0.05
+06      3.00       1.00       9.00       0.00          G        0.43
+07      7.00       3.00       2.00       1.00          A       -0.06
+08      0.00       4.00       0.00       9.00          T        0.65
+//
+//
+NA dl *
+PW 0.000000
+PO         A          C          G          T       cons         inf
+00      2.00       8.00      22.00       6.00          G        0.23
+01      8.00       4.00      26.00       0.00          G        0.61
+02      3.00       0.00      34.00       1.00          G        1.22
+03     33.00       1.00       4.00       0.00          A        1.14
+04     34.00       2.00       0.00       2.00          A        1.20
+05     36.00       0.00       1.00       1.00          A        1.44
+06     24.00       1.00       2.00      11.00          A        0.51
+07      4.00      12.00       3.00      19.00          Y        0.15
+08      8.00      23.00       2.00       5.00          C        0.29
+09      8.00      24.00       4.00       2.00          C        0.35
+//
+//
+NA hb *
+PW 0.000000
+PO         A          C          G          T       cons         inf
+00     17.00      13.00       7.00      66.00          T        0.43
+01      0.00       0.00       3.00     100.00          T        1.71
+02      1.00       5.00       1.00      96.00          T        1.47
+03      0.00       1.00       0.00     102.00          T        1.82
+04      0.00       0.00       0.00     103.00          T        1.89
+05      1.00       4.00       0.00      98.00          T        1.59
+06     59.00       7.00      29.00       8.00          A        0.38
+07     20.00      17.00      14.00      52.00          N        0.13
+//
+//
+NA kni *
+PW 0.000000
+PO         A          C          G          T       cons         inf
+00      1.00       1.00      18.00       0.00          G        1.11
+01     11.00       1.00       2.00       6.00          A        0.16
+02      3.00       3.00       5.00       9.00          N       -0.14
+03      0.00      19.00       0.00       1.00          C        1.37
+04      0.00       5.00       6.00       9.00          B        0.14
+05      7.00      11.00       1.00       1.00          C        0.26
+06      8.00       4.00       4.00       4.00          N       -0.22
+07      6.00       2.00       2.00      10.00          W        0.02
+08      0.00       1.00       1.00      18.00          T        1.11
+09      1.00       5.00       1.00      13.00          T        0.36
+//
+//
+NA Kr *
+PW 0.000000
+PO         A          C          G          T       cons         inf
+00     37.00       0.00       4.00       3.00          A        1.03
+01     33.00       6.00       1.00       4.00          A        0.68
+02     20.00      11.00       9.00       4.00          V        0.03
+03      2.00       0.00      40.00       2.00          G        1.29
+04      4.00       1.00      37.00       2.00          G        0.97
+05      6.00       3.00      35.00       0.00          G        0.90
+06      1.00       3.00       4.00      36.00          T        0.89
+07      8.00       4.00       4.00      28.00          T        0.34
+08     28.00       6.00       5.00       5.00          A        0.31
+09     16.00       8.00       5.00      15.00          H       -0.04
+//
+//
+NA tll *
+PW 0.000000
+PO         A          C          G          T       cons         inf
+00     25.00       2.00       6.00       4.00          A        0.42
+01     26.00       3.00       7.00       1.00          A        0.56
+02     27.00       0.00       8.00       2.00          A        0.75
+03      8.00       1.00      27.00       1.00          G        0.71
+04      0.00       1.00       0.00      36.00          T        1.60
+05      1.00      20.00       1.00      15.00          C        0.51
+06     28.00       2.00       7.00       0.00          A        0.81
+//
+final prior bcd * is 0.003704 0.003704
+final prior cad * is 0.003704 0.003704
+final prior dl * is 0.003704 0.003704
+final prior hb * is 0.003704 0.003704
+final prior kni * is 0.003704 0.003704
+final prior Kr * is 0.003704 0.003704
+final prior tll * is 0.003704 0.003704
+UFE wm prior 0.074074 0.074074
+bg prior 0.900000 0.900000
+ref species is dm3
+treestring is ((((((dm3:0.059,droSim1:0.075):0.041,(droYak2:0.104,droEre2:0.107):0.054):0.120,droAna3:0.377):0.072,dp4:0.397):0.061,droWil1:0.536):0.020,((droVir3:0.196,droMoj3:0.255):0.073,droGri2:0.291):0.337)
+em_prior is 1
+em_wm is 0
+do_segment is 0
+seglen is 0
+bg[0] = 0.290000
+bg[1] = 0.210000
+bg[2] = 0.210000
+bg[3] = 0.290000
+allocated memory
+read sequences
+parsed sequences
+mybgfile is set to 
+Calculating background frequencies from input sequence
+Calculating background model (markov order = 2) ... 
+AAA: 0 = 0.317737
+CAA: 1 = 0.300857
+GAA: 2 = 0.296212
+TAA: 3 = 0.291565
+ACA: 4 = 0.319679
+CCA: 5 = 0.296122
+GCA: 6 = 0.293617
+TCA: 7 = 0.281324
+AGA: 8 = 0.290752
+CGA: 9 = 0.309398
+GGA: 10 = 0.287726
+TGA: 11 = 0.292722
+ATA: 12 = 0.279814
+CTA: 13 = 0.305805
+GTA: 14 = 0.271394
+TTA: 15 = 0.271186
+AAC: 16 = 0.206746
+CAC: 17 = 0.201091
+GAC: 18 = 0.204545
+TAC: 19 = 0.205990
+ACC: 20 = 0.185542
+CCC: 21 = 0.218566
+GCC: 22 = 0.181915
+TCC: 23 = 0.208038
+AGC: 24 = 0.207680
+CGC: 25 = 0.208025
+GGC: 26 = 0.216298
+TGC: 27 = 0.208070
+ATC: 28 = 0.209424
+CTC: 29 = 0.204415
+GTC: 30 = 0.229829
+TTC: 31 = 0.228208
+AAG: 32 = 0.200218
+CAG: 33 = 0.225253
+GAG: 34 = 0.209091
+TAG: 35 = 0.209658
+ACG: 36 = 0.208032
+CCG: 37 = 0.240893
+GCG: 38 = 0.223404
+TCG: 39 = 0.215130
+AGG: 40 = 0.230408
+CGG: 41 = 0.209081
+GGG: 42 = 0.242455
+TGG: 43 = 0.206487
+ATG: 44 = 0.235020
+CTG: 45 = 0.216680
+GTG: 46 = 0.210269
+TTG: 47 = 0.203995
+AAT: 48 = 0.275299
+CAT: 49 = 0.272798
+GAT: 50 = 0.290152
+TAT: 51 = 0.292787
+ACT: 52 = 0.286747
+CCT: 53 = 0.244418
+GCT: 54 = 0.301064
+TCT: 55 = 0.295508
+AGT: 56 = 0.271160
+CGT: 57 = 0.273495
+GGT: 58 = 0.253521
+TGT: 59 = 0.292722
+ATT: 60 = 0.275742
+CTT: 61 = 0.273099
+GTT: 62 = 0.288509
+TTT: 63 = 0.296610
+done
+Enhancer predictions:
+  window length is 450
+  step length is 150
+  em prior difference is 0.100000
+Enhancer predictions done ...

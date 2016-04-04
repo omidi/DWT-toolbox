@@ -1,0 +1,42 @@
+
+In this directory are input files, 2 parameter files, and output files for 2 example
+runs of MotEvo in its enhancer finding mode.
+
+Input files:
+input.fna = 4 regions from the Drosophila genome (10-15Kb in length) known to contain
+an enhancer with sites for blastoderm WMs.
+input.fna.ma = Multiple alignments of the same 4 regions with orthologs from other
+Drosophila species.
+
+wms_blastoderm = file with 7 weight matrices for TFs bicoid, caudal, dorsal, hunchback, knirps,
+kruppel, and tailless.
+
+motevoc_params = parameter file.
+motevoc_params_ma = parameter file for the run with multiple alignments.
+
+
+Example 1
+------------
+Here we run on the melanogaster sequence only. Since EMprior is set to 1 the priors are estimated in each window.
+The priors are considered converged when they change by less than 5% (setting this lower will increase running
+time). We use a window size of 450bps and a step length of 150 bps (about 1 nucleosome). Note that we use 
+a second-order background model that is estimated directly from the input sequences.
+
+command:
+../../source/motevo input.fna motevoc_params wms_blastoderm > report
+
+output files:
+report = Report of MotEvo on parameters it read and running mode, etcetera.
+crmfile = Enhancer scores and site densities for all windows.
+
+Example 2
+-------------
+Here we run like in example 1, only now we just use 1 input region, and we now use multiple alignments of 
+this region with orthologous regions from other Drosophila species. 
+
+command:
+../../source/motevo input.fna.ma motevoc_params_ma wms_blastoderm > report_ma
+
+output files:
+report_ma = Report of MotEvo on parameters it read and running mode, etcetera.
+crmfile_ma = Enhancer scores and site densities for all windows.

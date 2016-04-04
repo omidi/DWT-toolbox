@@ -1,0 +1,26 @@
+refspecies hg18
+TREE ((((hg18:0.048,rheMac2:0.048):0.143,mm9:0.489):0.030,((canFam2:0.224,equCab1:0.149):0.011,bosTau3:0.246):0.047):0.365,monDom4:0.481);
+
+Mode TFBS
+EMprior 0
+
+UFEwmprior 200.0
+UFEwmfile ../../UFEmodels/UFE_mammals
+UFEwmlen 8
+UFEprint 1
+
+markovorderBG 0
+bgprior 0.98
+bg A 0.25
+bg T 0.25
+bg G 0.25
+bg C 0.25
+
+restrictparses 0
+sitefile sites_ma
+priorfile priors_ma
+loglikfile loglikelihoods_ma
+printsiteals 1
+minposterior 0.2
+
+

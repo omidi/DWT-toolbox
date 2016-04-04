@@ -1,0 +1,44 @@
+
+
+This is MotEvo distribution v1.0.
+
+Provided are source-code, a manual, several examples of MotEvo's use,
+and several auxiliary files that may be of use in practice.
+
+
+CONTENTS OF THIS DIRECTORY:
+
+source -> Directory with source code.
+
+Examples -> Directory with several example runs.
+
+manual.txt -> A description of MotEvo's use and parameters.
+
+parameter -> A listing and brief description of each MotEvo parameters.
+
+trees -> A directory with several phylogenetic trees for use in MotEvo.
+
+weight_matrices -> Sets of weight matrices for mammalian and yeast
+TFs for use in MotEvo.
+
+UFEmodels -> Pre-calculated Unidentified Functional Element files for
+mammals and Drosophila.
+
+
+There are README files in each subdirectory to help you further. 
+We suggest you first compile the code (in the source directory) and
+after that take a look at the manual.txt file in this directory, as
+well as at some examples in the 'Examples' directory.
+
+
+Contact and credits:
+
+MotEvo was developed by Phil Arnold, Ionas Erb, Nacho Molina, and Erik
+van Nimwegen. Please report any problems, bugs, comments, or requests
+for additional functionality to:
+erik.vannimwegen@unibas.ch
+Physical address:
+Core program Computational and Systems Biology
+Biozentrum, University of Basel
+Klingelbergstrasse 50-70
+4056 Basel, Switzerland

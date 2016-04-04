@@ -1,0 +1,27 @@
+refspecies dm3
+TREE ((((((dm3:0.059,droSim1:0.075):0.041,(droYak2:0.104,droEre2:0.107):0.054):0.120,droAna3:0.377):0.072,dp4:0.397):0.061,droWil1:0.536):0.020,((droVir3:0.196,droMoj3:0.255):0.073,droGri2:0.291):0.337)
+
+Mode ENH
+
+EMprior 1
+priordiff 0.1
+
+winlen 450
+steplen 150
+CRMfile crmfile_ma
+
+UFEwmprior 20.0
+UFEwmfile ../../UFEmodels/UFE_drosophila
+UFEwmlen 10
+UFEprint 1
+
+markovorderBG 2
+bgprior 0.90
+bg A 0.29
+bg T 0.29
+bg G 0.21
+bg C 0.21
+
+
+
+

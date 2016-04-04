@@ -1,0 +1,18 @@
+refspecies hg18
+TREE (hg18:1);
+
+Mode TFBS
+EMprior 0
+
+markovorderBG 0
+bgprior 0.99
+bg A 0.25
+bg T 0.25
+bg G 0.25
+bg C 0.25
+
+restrictparses 0
+sitefile sites_ref
+priorfile priors_ref
+minposterior 0.2
+

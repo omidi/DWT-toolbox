@@ -1,0 +1,21 @@
+refspecies dmel
+TREE (dmel:1)
+
+Mode ENH
+
+EMprior 1
+priordiff 0.05
+
+winlen 450
+steplen 150
+CRMfile crmfile
+
+markovorderBG 2
+bgprior 0.99
+bg A 0.25
+bg T 0.25
+bg G 0.25
+bg C 0.25
+
+
+

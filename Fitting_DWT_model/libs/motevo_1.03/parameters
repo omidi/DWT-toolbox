@@ -1,0 +1,45 @@
+MotEvo's parameters
+******************
+
+#general
+Mode:                     (word) Mode of running. This can be TFBS (TFBS predictions; default), ENH (enhancer finding), or WMREF (weight matrix refinement)
+refspecies:               (word) The identifier of the reference species (as found in the sequence identifier and in the phylogenetic tree).
+TREE:                     (tree string) Phylogenetic tree in Newick format.
+restrictparses:           (binary) When 1 only use sites that have a reference weight matrix score bigger than 0. Default: 0. Only used for testing.
+
+#priors
+bgprior:                  (real number) Prior probability for putting down a background at each position.
+EMprior:                  (binary) Use the expectation maximization algorithm to find the priors that maximize the probability of the observed alignment.
+priordiff:                (real value) Convergence criterium for prior estimation, e.g. at 0.01 iteration stops when priors change by less than 1%.
+UFEwmprior:               (real number) The prior weight of the UFE model relative to the other weight matrices.
+
+#background model
+markovorderBG:            (integer) Markov order of the background model.
+bg A		          (real number) background probability for A (for the zeroth order model)
+bg C		          (real	number) background probability for C (for the zeroth order model)
+bg G		          (real	number) background probability for G (for the zeroth order model)
+bg T		          (real	number) background probability for T (for the zeroth order model)
+mybgfile:                 (file name) Input file containing a higher order background model.
+
+
+#UFE
+UFEwmfile:                (file name) Input file containing the UFE model (run 'runUFE' to create it for a given tree and background model.)
+UFEwmlen:                 (integer) The length of UFE model sites.
+UFEprint:                 (binary) When set to zero UFE sites are not reported in the site file.
+UFEwmproffile:            (file name) Output file containing UFE model probabilities at each position.
+
+#TFBS output
+sitefile:                 (file name) Output file name of the file containing the predicted sites.
+priorfile:                (file name) Output file containing information like site density, final priors, and the total number of sites for each WM.
+loglikfile:		  (file name) Output file containing log-likelihood of each sequence (or alignment) in the input data. 
+minposterior:             (real number) When printing sites, only print sites with a posterior bigger than this cut-off.
+printsiteals:             (binary) When set to zero sequence alignments are not printed in the output file.
+
+#WM refinement
+minposteriorWM:           (real number) When doing weight matrix refinement, only include sites to refine that have a minimal posterior bigger than this cut-off.
+wmdiff:                   (real number) Convergence criterium for WM refinement, e.g. at 0.01 iteration stops when WM entries change by less than 1%
+
+#Enhancer prediction
+CRMfile:	          (file name) Output file containing the results when running MotEvo in the enhancer prediction mode.
+winlen:                   (integer) Length of the enhancer window used in enhancer prediction mode.
+steplen:                 (integer) Number of positions by which the window is moved at each step during enhancer prediction.

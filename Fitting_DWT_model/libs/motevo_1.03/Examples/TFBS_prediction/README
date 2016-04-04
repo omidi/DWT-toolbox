@@ -1,0 +1,73 @@
+
+In this directory are input files, parameter files, and output files for 3 example runs of MotEvo
+in its TFBS prediction mode.
+
+Input files:
+------------
+input_ref.fna = 11 proximal promoter regions on chromosome 7 of the human genome.
+input.fna = Multiple alignments with other mammals for the same 11 proximal promoter regions.
+
+Weight matrix files:
+wms_noweight = file with 3 example mammal weight matrices.
+wms_weight = the same 4 WMs but now with different prior weights assigned.
+
+Background model:
+bg_order1 = probabilities for a bg-model of order 1 (single neighbor).
+
+Parameter files:
+params_ref = Parameters for running only on the human sequence, 
+using a simple zeroth-order background model, and fixed prior.
+
+params_ma = Parameters for the same as previous but now on the
+multiple alignment, and printing log-likelihoods for each sequence
+
+params_prior_bg = In this version MotEvo also estimates the priors and uses a first
+order background model read from a file.
+
+
+Example 1
+---------
+Here we run only on the human sequence. The priors are the same for all motifs and are fixed. 
+A zeroth order background model with equal probabilities for each letter is used. Only sites 
+with posterior probability at least 0.2 are printed out.
+
+Command:
+../../source/motevo input_ref.fna params_ref wms_noweight > report_ref
+
+output files:
+report_ref = This contains information on the mode in which MotEvo was run.
+sites_ref = Predicted TFBSs.
+priors_ref = Predicted priors and densities.
+
+Example 2
+---------
+Here we run in the exact same way as in example 1, except that we now
+use multiple alignments as input and print out log-likelihoods of each
+sequence. We now use the UFE model, with length 8, and note also that
+we print out all predicted UFE sites in the output files.
+
+Command:
+../../source/motevo input.fna params_ma wms_noweight > report_ma
+
+output files:
+report_ma = Information on the mode in which MotEvo was run.
+sites_ma = Predicted TFBSs.
+priors_ma = Predicted priors and densities.
+loglikelihoods_ma = Log-likelihoods of each alignment under our model.
+
+Example 3
+---------
+Here we give different priori weights to the input WMs (these are specified by the 'PW' lines in the WM file), 
+we use expectation-maximization to fit all the priors, and we use a background model of order 1 that is
+read from a file. In addition, we do now omit the UFE sites from the reported sites.
+
+Command:
+../../source/motevo input.fna params_prior_bg wms_weight > report_prior_bg
+
+output files:
+report_ma_priorbg1 = Information on the mode in which MotEvo was run.
+sites_ma_priorbg1 = Predicted TFBSs.
+priors_ma_priorbg1 = Predicted priors and densities.
+
+Note that with prior updating only 1 Snail site remains over the 0.2 posterior cut-off at the end.
+

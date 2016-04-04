@@ -1,0 +1,109 @@
+letter A val is 0.250000
+letter T val is 0.250000
+letter G val is 0.250000
+letter C val is 0.250000
+Running in TFBS mode
+node 0 name hg18 qval 0.953134 parent hg18_rheMac2_
+node 1 name rheMac2 qval 0.953134 parent hg18_rheMac2_
+node 2 name mm9 qval 0.613239 parent mm9_hg18_rheMac2__
+node 3 name canFam2 qval 0.799315 parent canFam2_equCab1_
+node 4 name equCab1 qval 0.861569 parent canFam2_equCab1_
+node 5 name bosTau3 qval 0.781922 parent bosTau3_canFam2_equCab1__
+node 6 name monDom4 qval 0.618165 parent monDom4_mm9_hg18_rheMac2___bosTau3_canFam2_equCab1____
+node 7 name hg18_rheMac2_ qval 0.866754 parent mm9_hg18_rheMac2__
+node 8 name canFam2_equCab1_ qval 0.98906 parent bosTau3_canFam2_equCab1__
+node 9 name mm9_hg18_rheMac2__ qval 0.970446 parent mm9_hg18_rheMac2___bosTau3_canFam2_equCab1___
+node 10 name bosTau3_canFam2_equCab1__ qval 0.954087 parent mm9_hg18_rheMac2___bosTau3_canFam2_equCab1___
+node 11 name mm9_hg18_rheMac2___bosTau3_canFam2_equCab1___ qval 0.694197 parent monDom4_mm9_hg18_rheMac2___bosTau3_canFam2_equCab1____
+node 12 name monDom4_mm9_hg18_rheMac2___bosTau3_canFam2_equCab1____ qval 0 parent (null)
+//
+NA REST.p3
+PW 5.000000
+PO         A          C          G          T       cons         inf
+00     35.81      32.91      90.09     223.99          T        0.40
+01      8.47      42.47      24.29     307.57          T        0.99
+02     10.07     358.37       3.10      11.27          C        1.53
+03    376.28       1.00       5.52       0.50          A        1.82
+04      8.36       1.00     373.45       0.50          G        1.78
+05     22.66     263.98      61.62      34.54          C        0.62
+06    380.80       0.50       1.00       1.00          A        1.90
+07      0.50     382.81       0.50       0.50          C        1.92
+08      5.54     358.93       1.29      17.04          C        1.56
+09    221.76      37.68      55.11      68.25          A        0.34
+10     50.81     120.25      29.57     182.18          Y        0.26
+11      6.01       1.00     375.80       0.50          G        1.81
+12      5.01       0.50     376.80       0.99          G        1.83
+13    347.87      23.93       1.99       9.02          A        1.43
+14      3.42     305.60      58.75      15.03          C        1.05
+15    380.82       1.00       0.50       0.98          A        1.90
+16      6.00       1.98     371.82       3.00          G        1.74
+17     39.93     258.68      40.06      44.13          C        0.55
+18     79.16       6.95     179.82     116.88          K        0.36
+19     50.05     225.38      80.33      27.04          C        0.39
+20     32.44     300.08       3.01      47.28          C        0.96
+//
+//
+NA E2F1..5.p2
+PW 1.000000
+PO         A          C          G          T       cons         inf
+00      0.92      10.16       5.23     431.17          T        1.70
+01      3.46      25.33       7.64     411.05          T        1.47
+02      0.00       3.23       0.00     444.25          T        1.91
+03      0.83     174.06     269.22       3.36          G        0.93
+04      0.00      84.32     363.15       0.00          G        1.27
+05      2.60     444.00       0.88       0.00          C        1.90
+06      0.82       0.85     434.25      11.55          G        1.76
+07      0.00     417.61      25.64       4.23          C        1.58
+//
+//
+NA SNAI1..3.p2
+PW 2.000000
+PO         A          C          G          T       cons         inf
+00      0.00      99.23       0.00       0.00          C        1.89
+01     99.23       0.00       0.00       0.00          A        1.89
+02      0.00       0.00      99.23       0.00          G        1.89
+03      0.00       0.00      99.23       0.00          G        1.89
+04      0.00       0.00       0.00      99.23          T        1.89
+05      0.00       0.00      99.23       0.00          G        1.89
+//
+final prior REST.p3 is 0.000481 0.000481
+final prior E2F1..5.p2 is 0.000096 0.000096
+final prior SNAI1..3.p2 is 0.000192 0.000192
+UFE wm prior 0.019231 0.019231
+bg prior 0.980000 0.980000
+ref species is hg18
+treestring is ((((hg18:0.048,rheMac2:0.048):0.143,mm9:0.489):0.030,((canFam2:0.224,equCab1:0.149):0.011,bosTau3:0.246):0.047):0.365,monDom4:0.481);
+em_prior is 1
+em_wm is 0
+do_segment is 0
+seglen is 0
+bg[0] = 0.250000
+bg[1] = 0.250000
+bg[2] = 0.250000
+bg[3] = 0.250000
+allocated memory
+read sequences
+parsed sequences
+mybgfile is set to bg_order1
+Reading background frequencies from input file
+Reading background bg_order1
+id = AA	value = 0.220922	index = 0
+id = CA	value = 0.236352	index = 1
+id = GA	value = 0.198652	index = 2
+id = TA	value = 0.100787	index = 3
+id = AC	value = 0.291135	index = 4
+id = CC	value = 0.364367	index = 5
+id = GC	value = 0.301710	index = 6
+id = TC	value = 0.364173	index = 7
+id = AG	value = 0.371986	index = 8
+id = CG	value = 0.165468	index = 9
+id = GG	value = 0.354683	index = 10
+id = TG	value = 0.335039	index = 11
+id = AT	value = 0.115957	index = 12
+id = CT	value = 0.233813	index = 13
+id = GT	value = 0.144955	index = 14
+id = TT	value = 0.200000	index = 15
+total prior dif 0.235216
+total prior dif 0.053862
+total prior dif 0.067806
+total prior dif 0.001109

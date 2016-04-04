@@ -1,0 +1,66 @@
+letter A val is 0.250000
+letter T val is 0.250000
+letter G val is 0.250000
+letter C val is 0.250000
+Running in WMREF mode
+node 0 name hg18 qval 0.953134 parent hg18_rheMac2_
+node 1 name rheMac2 qval 0.953134 parent hg18_rheMac2_
+node 2 name mm9 qval 0.613239 parent mm9_hg18_rheMac2__
+node 3 name canFam2 qval 0.799315 parent canFam2_equCab1_
+node 4 name equCab1 qval 0.861569 parent canFam2_equCab1_
+node 5 name bosTau3 qval 0.781922 parent bosTau3_canFam2_equCab1__
+node 6 name monDom4 qval 0.618165 parent monDom4_mm9_hg18_rheMac2___bosTau3_canFam2_equCab1____
+node 7 name hg18_rheMac2_ qval 0.866754 parent mm9_hg18_rheMac2__
+node 8 name canFam2_equCab1_ qval 0.98906 parent bosTau3_canFam2_equCab1__
+node 9 name mm9_hg18_rheMac2__ qval 0.970446 parent mm9_hg18_rheMac2___bosTau3_canFam2_equCab1___
+node 10 name bosTau3_canFam2_equCab1__ qval 0.954087 parent mm9_hg18_rheMac2___bosTau3_canFam2_equCab1___
+node 11 name mm9_hg18_rheMac2___bosTau3_canFam2_equCab1___ qval 0.694197 parent monDom4_mm9_hg18_rheMac2___bosTau3_canFam2_equCab1____
+node 12 name monDom4_mm9_hg18_rheMac2___bosTau3_canFam2_equCab1____ qval 0 parent (null)
+//
+NA ctcf.drosophila
+PW 0.000000
+PO         A          C          G          T       cons         inf
+00      6.00      14.00       2.00       8.00          H        0.03
+01      5.00       8.00      16.00       1.00          G        0.19
+02     11.00       4.00      10.00       5.00          N       -0.10
+03      7.00      16.00       5.00       2.00          C        0.11
+04      5.00      22.00       2.00       1.00          C        0.59
+05      9.00       4.00      13.00       4.00          N       -0.05
+06     14.00      11.00       5.00       0.00          M        0.28
+07      2.00      14.00       1.00      13.00          Y        0.31
+08     26.00       0.00       4.00       0.00          A        1.18
+09      1.00       0.00      28.00       1.00          G        1.33
+10      9.00       1.00      19.00       1.00          G        0.51
+11      0.00       1.00       8.00      21.00          T        0.72
+12      0.00       0.00      30.00       0.00          G        1.73
+13      0.00       0.00      23.00       7.00          G        0.96
+14      0.00      29.00       0.00       1.00          C        1.53
+15      0.00       1.00      28.00       1.00          G        1.33
+16      0.00      28.00       0.00       2.00          C        1.39
+17      1.00      11.00       3.00      15.00          Y        0.25
+//
+final prior ctcf.drosophila is 0.000050 0.000050
+UFE wm prior 0.009950 0.009950
+bg prior 0.990000 0.990000
+ref species is hg18
+treestring is ((((hg18:0.048,rheMac2:0.048):0.143,mm9:0.489):0.030,((canFam2:0.224,equCab1:0.149):0.011,bosTau3:0.246):0.047):0.365,monDom4:0.481);
+em_prior is 0
+em_wm is 1
+do_segment is 0
+seglen is 0
+bg[0] = 0.250000
+bg[1] = 0.250000
+bg[2] = 0.250000
+bg[3] = 0.250000
+allocated memory
+read sequences
+parsed sequences
+mybgfile is set to 
+Calculating background frequencies from input sequence
+Calculating background model (markov order = 0) ... 
+wmdiff 1.189324
+wmdiff 0.273506
+wmdiff 0.065524
+wmdiff 0.006299
+wmdiff 0.000440
+wmdiff 0.000013
