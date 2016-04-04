@@ -369,6 +369,23 @@ def calculate_PS_posterior(args, TF, program_dir=''):
     return 0
 
 
+def generate_diLogo(args, TF, program_dir=''):
+    prog = os.path.join(program_dir, '../diLogo/diLogo.py')
+    cmd = ' '.join([
+        sys.executable,
+        prog,
+        '-i %s' % os.path.join(args.output_dir,'%s.dwt' % TF),
+        '-p %s' % os.path.join(args.output_dir,'%s.post' % TF),
+        '-o %s' % args.output_dir,
+    ])
+    if run(cmd):
+         sys.stderr.write ( "\nError in generating diLogo\n" )
+         print "command: %s" % cmd
+         print 'Program halts!\n'
+         exit()
+    return 0
+
+
 def main():
     args =arguments()
     mkdir(args.output_dir)
@@ -377,7 +394,6 @@ def main():
         TF = os.path.basename(args.WM).split('.')[0]
     else:
         TF = args.TF
-
     if args.with_background:
         args.background = background_model(args.fasta_file)
     else:
@@ -402,8 +418,9 @@ def main():
         print "*****************************"
         alg_1 = alg_2
         alg_2 = None
-    clean_up_directory(args, 12, TF)
+    clean_up_directory(args, iteration, TF)
     calculate_PS_posterior(args, TF, program_dir)
+    generate_diLogo(args, TF, program_dir)
 
 if __name__ == '__main__':
         main()
