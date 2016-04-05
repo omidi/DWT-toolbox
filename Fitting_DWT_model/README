@@ -1,0 +1,33 @@
+This is the code for fitting a DWT model to a set of DNA sequences.
+
+Provided are source-code, a manual, several examples of the program's usage.
+
+
+CONTENTS OF THIS DIRECTORY:
+
+fitting_DWT_model.py -> A Python implementation for fitting a DWT model to a
+                        set of DNA sequences, given an initial PSWM (or WM)
+                        model.
+
+Examples -> Directory with several examples to run the program.
+
+manual.txt -> A description of the program usage and input arguments.
+
+libs -> Contains MotEvo source code and executable. MotEvo is a program for
+        identifying TFBS. In general, MotEvo can use phylogenetic information
+        over a multiple alignments. However, here we are using it in a normal
+        single species mode.
+
+
+There are README files in each subdirectory to help you further. We suggest
+you first check out the manual.txt file, which explains how to run the prog-
+ram.
+
+
+Contact and credits:
+The DWT model was developed by Saeed Omidi and Erik van Nimwegen. 
+Please report any problems, bugs, comments, or requests
+
+for additional functionality to:
+saeed.omidi@gmail.com
+erik.vannimwegen@unibas.ch

@@ -1,0 +1,171 @@
+Dinucleotide Weight Tensors: Automated Incorporation of Pairwise Dependency 
+within Transcription Factor Binding Sites
+********************************************************************
+
+CONTENTS:
+
+0. Introduction
+1. Prerequisites on running fitting_DWT_model.py
+    1.1. Installing MotEvo
+2. Running fitting_DWT_model.py
+    2.1. PSWM format
+    2.2. DNA FASTA file
+    2.3. Other input arguments
+3. Output files
+4. Contact and credits.
+
+*********************************************************************
+
+
+0. Introduction
+Here we are presenting a program that can be used to fit a DWT model to a set of DNA sequences. Given a set of DNA sequ-
+ences and a PSWM (or WM) file, the fitting_DWT_model.py fits a DWT model via an iterative scheme. The DNA sequences can
+be of various lengths. For instance, a set of peaks from a ChIP-seq data. The PSWM file needs to follow a certain forma-
+t (see section ?). The final output of the program is a DWT flat file, posterior of positional dependencies for all pai-
+rs of positions, a diLogo in PDF format for the final DWT, and a set of predicted TF binding sites.
+
+
+1. Prerequisites on running fitting_DWT_model.py
+Before running the program, there are several prerequisites which must be installed. The program is implemented in Pyth-
+on. Hence, first, there are these requirements:
+    - Python 2.7
+    - argparse library for Python
+
+The fitting_DWT_model.py calls several programs from the current toolbox. Therefore, user needs to properly install the-
+se tools. This includes:
+    - DWT_TFBS_prediction at ../DWT_model/Source (see compiling guide in the directory)
+    - positional_dependency_posterior at ../Positional_Dependency_Posterior/Source (see compiling guide in  the  direct-
+    ory)
+    - diLogo.py at ../diLogo (see the manual.txt for installing the dependencies)
+    - motevo binary file at libs/motevo_1.03/bin. If not available, see the next sub-section for installing MotEvo.
+
+
+1.1. Installing MotEvo
+MotEvo is a general program for predicting and analyzing TF binding sites. See libs/motevo_1.03/manual.txt and libs/mot-
+evo_1.03/README for more information. In our program, we use MotEvo at first to predict a set of binding sites. For that
+a functioning executable motevo file need to be placed at the libs/motevo_1.03/bin directory. If it does not exist, user
+should first compile the MotEvo source code (written in C) and copy the binary file into the bin directory. For compili-
+ng the source code, first go to libs/motevo_1.03/source directory, and from there run the following commands:
+
+make
+cp motevo ../bin/.
+
+For more information on compiling and running MotEvo see  libs/motevo_1.03/manual.txt .
+
+
+1. Input files and their format
+In this section we describe the input paramters (arguments) that are needed for 
+running the DWT_TFBS_prediction program. Below shows an example of how to run 
+the program:
+
+./DWT_TFBS_prediction CTCF.dwt sequences.fasta param_file.txt
+
+We now explain each of these input parameters, with the same order. 
+
+
+2. Running fitting_DWT_model.py
+Assuming that all the dependencies are installed and in place for running the program, here we  show how to  perform the
+fitting of a DWT model to a set of DNA sequences. In general, one can run the program in the command-line as bellow:
+
+/usr/local/bin/python fitting_DWT_model.py --help
+
+That will give some information on the way of running the program and its input arguments. We are now first focus on mo-
+st import arguments: PSWM file and DNA FASTA file. Afterwards, we explain other optional input arguments.
+
+
+2.1. PSWM format (-w option)
+The the PSWM format that both MotEvo and fitting_DWT_model.py use as input are provided in a TRANSFAC-like format. Below
+is an example of a single WM:
+
+//
+NA name_of_TF
+PO      A       C       G       T
+1       0       0       0       10
+2       0       0       0       10
+3       0       0       0       10
+4       0       4       6       0
+5       0       2       8       0
+//
+
+This PSWM has length 5. The counts on each line indicate the number of known sites for the motif that have an A, C, G,
+and T at this position respectively. As example of the PSWM file, see BHLHE.wm or CEBPB.wm in the Examples directory.
+
+
+2.2. DNA FASTA file (-f option)
+The DNA sequences need to be provided in FASTA format. For that, each sequence entails two lines of the file.  The first
+line contain the sequence ID proceeded with a double > sign (>>),  and the second line the actual DNA sequence.  The DNA
+should not have a gap or other special characters like new-line (\n). Below, shows an example of a DNA FASTA file:
+
+>>hg19_chr3_128444844_128444965_reg1000954.p1_117.232238095_+
+ATGGGGACAACCATTTGGGGGCAGACATGTTTGTAGCACGAGATCCAGGCTCAGTCCCGAGGCAGCCGGAACGTGACGCAAGGTTGAGGCGGGGCCCGCACCCTGGCGTCGAGCG
+>>hg19_chr9_97488904_97489022_reg1000706.p2_145.265719626_+
+TAGCGGAAGGCGGGTCAGGCAGAATGCGGCCCCGGGCGCGTGTGGATGACGTCACCCGGCGCGTGCCGGGGTAGCCCGTAGTAACCCCGAGTCTGCGGAAGTGGTGACCCGTGGGACGC
+>>hg19_chr16_87421706_87421832_reg1000553.p1_179.231594595_+
+GGAACCTCAGCCCGTTCCACCTGGTGTTACACACTCATTTAGGAAACAGCTGCGGGTCGCGTGACTGATTTGTCAGTGCTTTACCACGCGTTCT
+>>hg19_chr4_114683824_114683968_reg1000020.p3_206.659064789_+
+CGATATTTCCCACTCTGGCGGTCAGGGGGAGGTAGTAGGAAGGCTGGGTGTCGGTCACGCGACCCGGCGGGGGCTGACGTCATTCACATCACGTAG
+>>hg19_chr6_138187810_138187952_reg1000567.p1_116.899464968_+
+GACCAAAGGCTGTCACCGCTGCTTTTTCTCGAAATGCCCGCCCGGGTCCTGTCTGGGGCTCCCGCCTACGCGCTCATCACGTGCACAGCCCAAACTTTTCA
+>>hg19_chr13_31736068_31736209_reg1001036.p1_94.8717815534_+
+CTTATGTATCGCACTGATCAGAACTTTCCAGAATCTGCGGCATTTACTCACCGGCGCCTCCACCGGCCCCTCCACGTG
+>>hg19_chr9_130538750_130538850_reg1002579.p1_106.08503937_+
+CTGGGGTGATACCATCTCCTGGTTTCTGCGGGGGTGTATGTGAGTTCCCTCCCCCTGCCCCCAGCTGTGGGACTGTCCCTTCTCACAGCCACCACCAACTG
+
+
+In this example, we have seven DNA sequences each of which are represented  with a unique IDs.  Note that the ID strings
+are started with >>, instead of a single >. This is because we are adopting the same formating as in MotEvo. See the ma-
+nual.txt of MotEvo for more information (libs/motevo_1.03/manual.txt)
+
+
+
+2.3. Other input arguments
+Other input parameters are explained here.
+    -o or --outdir: This option specifies a name of a directory that will be used to copy the output files. Although, u-
+                    sing it is optional, it is highly recommended to use this option to avoid re-writting the files that
+                    already exist. Note that the directory will be created, if it does not exist a priori.
+    -b or --with_bg: Using this option tells the program to use the frequencies of nucleotides (bases) in the input DNA
+                     sequences for setting the background frequencies. If it is not provided, a uniform background freq-
+                     uences will be used for calculating the PSWM or DWT scores.
+    -p or --min_post: At each round of  iteration,  the program selects a set of binding sites to build up the model for
+                      the next round. By default,  we are selecting every binding  site that has a posterior probability
+                      of at least 0.5. However, user can explicitly define the minimum posterior threshold by using this
+                      option.
+    -t or --tf: It gives the name of the TF. If not provided, the WM file name is used as the name of the TF.
+    -v or --verbose: To print out some information, while running the program, on the screen.
+
+
+
+3. Output files
+After running the program sucesfully, a set of files will be generated and placed in the output directory (or the curre-
+nt working directory if the option -o is not used). This mainly includes:
+    - A DWT flat file, which has the 'dwt' extension.
+    - A set of binding sites with the 'alg' extension.
+    - Posterior of positional dependencies between all pairs of positions. This files has 'post' extension.
+    - A diLogo for the DWT model in PDF format.
+    - A directory named 'intermediate_results' that contains files that were produced during running the program.
+
+
+
+4. Contact and credits
+The DWT model is developed in C++ by Saeed Omidi and Erik van Nimwegen.
+For citing our work, please check out our website: 
+http://nimwegenlab.org/
+
+Source code repository: 
+https://github.com/omidi/DWT-model
+
+email address:
+saeed.omidi@gmail.com
+erik.vannimwegen@unibas.ch
+
+connecting to us on Twitter: 
+@NimwegenLab
+@SaeedOmidi
+
+Physical address:
+Core program Computational and Systems Biology
+Biozentrum, University of Basel
+Klingelbergstrasse 50-70
+4056 Basel, Switzerland
+
+
