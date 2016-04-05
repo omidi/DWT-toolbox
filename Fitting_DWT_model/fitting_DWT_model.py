@@ -4,48 +4,58 @@ import sys
 import subprocess
 import math
 import re
+import textwrap
 import numpy as np
 from itertools import combinations, product
 from string import upper
-
+import time
 
 def arguments():
     import argparse
-    parser = argparse.ArgumentParser(description="""
+    parser = argparse.ArgumentParser(description=textwrap.fill(textwrap.dedent("""
     By providing a DNA FASTA file and a PSWM file (normal weight matrix),
     this codes fit a DWT model, iteratively. The output ia a DWT flat file
     which will be copied in the current working directory or the destination
     directory.
-    """, prog='fitting_DWT_model.py', formatter_class=argparse.RawDescriptionHelpFormatter)
+    """), width=70, break_long_words=True, break_on_hyphens=True),
+                                     prog='fitting_DWT_model.py',
+                                     formatter_class=argparse.RawDescriptionHelpFormatter)
 
     parser.add_argument('-w', '--wm', dest='WM',
-                      help="""A normal weight matrix file, for formatting consult with the
-                      manual.txt file""", \
+                      help=textwrap.fill(textwrap.dedent("""A normal weight matrix file, for formatting please check out
+                      the manual.txt file"""), width=70, break_long_words=True, break_on_hyphens=True), \
                       action='store', type=str,  metavar='\b', required=True)
     parser.add_argument('-f' , '--fasta', dest='fasta_file' ,
-                      help="""DNA FASTA file""", \
+                      help="""A DNA FASTA file""", \
                       action='store', type=str,  metavar='\b', required=True)
     parser.add_argument('-o' , '--outdir', dest='output_dir' ,
-                      help="""Optional input for the output directory. if not provided,
-                      the current working directory will be used as the output directory.""", \
+                      help=textwrap.fill(textwrap.dedent("""Optional input for the output directory. if not provided,
+                      the current working directory will be used as the output directory.
+                      In order to secure the local files, it is, however, recommended to
+                      specify the output directory."""), width=70, break_long_words=True, break_on_hyphens=False), \
                       action='store', type=str, required=False,  metavar='\b')
     parser.add_argument('-b', '--with_bg', action='store_true', default=False,
-                      help="""Whether the nucleotide background frequency is set according
+                      help=textwrap.fill(textwrap.dedent("""Whether the nucleotide background frequency is set according
                       to the provided DNA sequences. But if not used, a uniform background
                       frequency will be used.
-                      """, dest='with_background')
+                      """), width=70, break_long_words=True, break_on_hyphens=False), dest='with_background')
     parser.add_argument('-p', '--min_post', action='store', required=False, metavar='\b',
-                        help="""Optional minimum posterior cutoff, for selecting TFBS at each
-                             round of iteration. (Default 0.5)""",
+                        help=textwrap.fill(textwrap.dedent("""Optional minimum posterior cutoff, for selecting TFBS at each
+                             round of iteration. (Default 0.5)"""), width=70, break_long_words=True, break_on_hyphens=False),
                         dest="min_post", type=float, default=0.5)
     parser.add_argument('-t', '--tf', action='store', metavar='\b', required=False,
                         help="""Optional TF name, if not given the TF name is assumed to be
                         identical to the name of the PSWM file.
                         """, dest="TF", type=str)
+    parser.add_argument('-v', '--verbose', action='store_true', required=False,
+                        help="""Activating the verbose mode
+                        """, dest="verbose")
     args = parser.parse_args()
     if args.min_post > 1 or args.min_post < 0:
         print '\nMinimum posterior is invalid! \n'
         exit()
+    if not args.output_dir:
+        args.output_dir = ''
     return args
 
 
@@ -60,9 +70,9 @@ def mkdir(name):
         if stderr_value.rfind('File exists') > 0:
             # sys.stderr.write ( "\nWarning in creating directory\n")
             # print '\tstderr:', repr(stderr_value.rstrip())
-            # print
-            # print """The program continues, but it may remove/change file(s) that are
-            # already in %s directory""" % name
+            print "The output directory %s already exists." % name
+            print """The program continues, but it may remove/change file(s) that are
+            already in %s directory""" % name
             None
         else:
              sys.stderr.write ( "\nError in creating directory REGIONS\n" )
@@ -84,15 +94,16 @@ def run(cmd):
     return None
 
 
-def runMotevo(inputSequences, paramFile, WM, DirName, program_dir = ""):
-    curr_dir = os.getcwd()
+def runMotevo(args, paramFile, program_dir = ""):
     prog = os.path.join(program_dir, 'libs/motevo_1.03/bin/motevo')
     cmd = ' '.join([prog,
-                  inputSequences,
-                  os.path.join(DirName, paramFile),
-                  WM])
+                    args.fasta_file,
+                    paramFile,
+                    args.WM
+                    ])
     if run(cmd):
         sys.stderr.write ( "\nError in running MotEvo\n")
+        print 'command: %s' % cmd
         print 'Program halts! '
         exit()
     run('rm wms.updated')
@@ -137,16 +148,14 @@ def motevoParamFile(fileName, motifLength, TFname, args):
                                    'printsiteals 1',
                                    ]))
     paramFile.flush()
-    return 0
+    return fileName
 
 
 def copyWM(args, TF, program_dir=''):
     motifLength = len([line for line in open(args.WM)
                        if re.search(r'^\d+', line)])
-    motevoParamFile(os.path.join(args.output_dir, 'motevo_params'), motifLength, TF, args)
-    runMotevo(args.fasta_file,
-              'motevo_params',
-              os.path.basename(args.WM), args.output_dir, program_dir)
+    motevo_params = motevoParamFile(os.path.join(args.output_dir, 'motevo_params'), motifLength, TF, args)
+    runMotevo(args, motevo_params, program_dir)
     return 0
 
 
@@ -344,7 +353,8 @@ def make_alignment(dwt_res_file, args, s_0=None, iteration=0):
 
 def clean_up_directory(args, last_iteration, TF):
     curr_dir = os.getcwd()
-    os.chdir(args.output_dir)
+    if args.output_dir:
+        os.chdir(args.output_dir)
     run('mkdir intermediate_results')
     run('mv * intermediate_results/.')
     run('cp intermediate_results/dwt_%d %s.dwt' % (last_iteration, TF))
@@ -376,7 +386,7 @@ def generate_diLogo(args, TF, program_dir=''):
         prog,
         '-i %s' % os.path.join(args.output_dir,'%s.dwt' % TF),
         '-p %s' % os.path.join(args.output_dir,'%s.post' % TF),
-        '-o %s' % args.output_dir,
+        '-o %s' % args.output_dir if args.output_dir else '',
     ])
     if run(cmd):
          sys.stderr.write ( "\nError in generating diLogo\n" )
@@ -388,7 +398,8 @@ def generate_diLogo(args, TF, program_dir=''):
 
 def main():
     args =arguments()
-    mkdir(args.output_dir)
+    if args.output_dir:
+        mkdir(args.output_dir)
     program_dir = os.path.dirname(sys.argv[0])
     if not args.TF:
         TF = os.path.basename(args.WM).split('.')[0]
@@ -401,8 +412,9 @@ def main():
     iteration = 1
     copyWM(args, TF, program_dir)
     alg_file, alg_1 = process_motevo_output(args)
-    print "number of identified TFBS in iteration 1 is %d" % len(alg_1)
-    print "*****************************"
+    if args.verbose:
+        print "number of identified TFBS in iteration 1 is %d" % len(alg_1)
+        print "*****************************"
     dwt_file = generate_DWT(alg_file, TF)
     dwt_results = os.path.join(args.output_dir, 'DWT_results')
     dwt_param_file = DWT_param_file(args, dwt_results)
@@ -413,11 +425,13 @@ def main():
         alg_2, s0, alg_file2 = make_alignment(dwt_results, args, iteration=iteration)
         dwt_file = generate_DWT(alg_file2, TF)
         diff = difference(alg_1, alg_2)
-        print "difference at round %i is %f" % (iteration, diff)
-        print "number of identified TFBS in this iteration is %d" % len(alg_2)
-        print "*****************************"
+        if args.verbose:
+            print "difference at round %i is %f" % (iteration, diff)
+            print "number of identified TFBS in this iteration is %d" % len(alg_2)
+            print "*****************************"
         alg_1 = alg_2
         alg_2 = None
+    iteration=5
     clean_up_directory(args, iteration, TF)
     calculate_PS_posterior(args, TF, program_dir)
     generate_diLogo(args, TF, program_dir)
