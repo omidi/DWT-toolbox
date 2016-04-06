@@ -6,7 +6,9 @@ Here we are providing a set of tools and scripts that can be used offline. For e
 More specifically, following tools are provided in this repository: 
 * DWT_model: This directory contains a C++ implementation of the DWT model, which users can scan DNA sequences for identifying binding sites under the DWT model. 
 * Positional_Dependency_Posterior: In this directory, a C++ implementation can be found that is useful for calculating the posterior probabilities of positional dependencies within TF binding sites. 
-* diLogo: A Python script for generating graphical representation of the positional dependency model, provided a DWT flat file. 
+* diLogo: A Python script for generating graphical representation of the positional dependency model, provided a DWT flat file.
+* Fitting_DWT_model: It contains a program, implemented in Python, for fitting a DWT model given a set of DNA sequences and an initial position-speicific weight matrix (PSWM) model.
+This program uses other programs in this pipeline, therefore, it's recommended first to compile the other programs.
 
 For compiling the C++ codes, we have created `Makefile` under `Source` directories. In Linux and Mac, by simply running  `make` in the `Source` directory, the executable of the program will be created. 
 
