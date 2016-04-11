@@ -27,7 +27,7 @@ Window::Window(string str, Score sc , int len, double minimum_score){
 	slide(sc.get_TF() + "_result");
 }
 
-Window::Window(string str, ParameterFile params ,Score sc , int len){
+Window::Window(string str, ParameterFile params, Score sc ,int len){
 	filename = str;
 	score = sc;
 	l = len;
@@ -95,18 +95,17 @@ inline void Window::slide(string result_file_name){
 	}
 	else{
 		ofstream RESULT (result_file_name.c_str(), ios::out);
-		string sequence, position, chr, specie;
+		string sequence, specie;
 		while (true){
 			FILE >> specie;
 
 			if (FILE.eof())	// if it's not here, we read a sequence twice! for example if the last sequence is AAAAAA, it considers the sequence twice!
 				break;
-
-			FILE >> chr;
-			FILE >> position;
+//			FILE >> chr;
+//			FILE >> position;
 			FILE >> sequence;
-//			specie = boost::replace_all(specie, ">", "");
-			regional_slide (specie, chr, position, sequence, RESULT);
+            specie = specie.substr(1);
+			regional_slide (specie, sequence, RESULT);
 
 		}
 		RESULT.close();
@@ -123,9 +122,10 @@ inline bool Window::is_valid(string str){
 }
 
 
-inline void Window::regional_slide(string specie, string chr, string position, string sequence, ofstream& RESULT){
+inline void Window::regional_slide(string specie, string sequence, ofstream& RESULT){
 	double temp = .0;	// this variable holds the score of the sequence to prevent re-calculation
 	double wm_score = .0;
+	string position="0";
 	string c_sequence;	// this variable holds the complement of the sequence
 	if (sequence.length() >= l)  // this is to check whether the sequence is at least as big as the motif length
 		for (unsigned short int i = 0 ; i <= (sequence.length() - l) ; i++){
