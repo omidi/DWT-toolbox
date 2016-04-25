@@ -1,7 +1,12 @@
 # DWT-toolbox: A collection of programs for analyzing positional dependency within TF binding sites
-Here you find a number of useful programs for analyzing TF binding specificity under the DWT model. We have implemented several functionalities of the DWT model in a form of a website which can be found at [dwt.unibas.ch](https://dwt.unibas.ch).
+Here you find a number of useful programs for analyzing TF binding specificity under the DWT model. We have implemented
+several functionalities of the DWT model in a form of a website which can be found at [dwt.unibas.ch](https://dwt.unibas.ch).
 
-Here we are providing a set of tools and scripts that can be used offline. For each tool, there is a directory that in addition to the source code and examples, there is a `README` and a `manual.txt` file. The content of each directory is independent from the other directories. The `README` and `manual.txt` files explain the content of the directory and give guidelines on running the programs. Moreover, the content of `Examples` directory  under each directory demonstrates the usage of the program. 
+Here we are providing a set of tools and scripts that can be used offline. For each tool, there is a directory that in
+addition to the source code and examples, there is a `README` and a `manual.txt` file. The content of each directory is
+independent from the other directories. The `README` and `manual.txt` files explain the content of the directory and give
+guidelines on running the programs. Moreover, the content of `Examples` directory  under each directory demonstrates the
+usage of the program.
 
 More specifically, following tools are provided in this repository: 
 * DWT_model: This directory contains a C++ implementation of the DWT model, which users can scan DNA sequences for identifying binding sites under the DWT model. 
