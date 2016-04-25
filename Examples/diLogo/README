@@ -1,0 +1,72 @@
+This directory contains input files for generating diLogo and DWT flat files. It is assumed that the required library and
+tools are being installed, for more information see:  '../../manual.txt'
+
+
+Input files:
+------------
+CTCF.dwt = DWT flat file that contains the binding specificity model for CTCF under the DWT model.
+
+CEBPB.dwt = DWT flat file that contains the binding specificity model for CEBPB under the DWT model.
+
+CTCF.post = Posterior of dependency between pairs of positions within the binding site of CTCF.
+
+CEBPB.post = Posterior of dependency between pairs of positions within the binding site of CEBPB.
+
+CTCT.alg = A file that contains a set of binding sites for CTCF, where each of the sequences have a weight.
+
+
+In the following examples, we assumed that the diLogo.py and generate_DWT_model.py are being located in the Source dire-
+ctory located at '../../Source/'.
+
+
+Example 1
+---------
+Showing an example of generating diLogo for CTCF:
+
+/usr/local/bin/python ../../Source/diLogo.py -i CTCF.dwt -p CTCF.post
+
+
+output file:
+       CTCF.pdf: The diLogo for CTCF in PDF format. Note that by default, positions are taken as dependent if they have
+       at least a posterior of dependeny of 0.9.
+
+
+
+Example 1
+---------
+Showing an example of generating diLogo for CREBP: 
+
+/usr/local/bin/python ../../Source/diLogo.py -i CEBPB.dwt -p CEBPB.post -c 0.5
+
+
+output file:
+       CEBPB.pdf: The diLogo for CEBPB in PDF format. In this example, unlike Example 1, the minimum posterior of dep-
+       endency needs to be 0.5. Therefore, that would lead to a higher number of identified dependencies.
+
+
+
+Example 3
+---------
+Generating a DWT flat file from a set of aligned sequences. 
+
+/usr/local/bin/python ../../Source/generate_DWT_model.py -i CTCF.alg > CTCF.dwt
+
+
+output file:
+       CTCF.dwt: Contains the DWT flat file as generated from the set input sequences. By default the name of TF in the
+       DWT flat file is set to 'TF'. However, this can be specified at the time of running by option -t. See the next
+       example.
+
+
+
+Example 4
+---------
+Generating a DWT flat file from a set of aligned sequences. 
+
+/usr/local/bin/python ../../Source/generate_DWT_model.py -i CTCF.alg -t CTCF > CTCF.dwt
+
+
+output file:
+       CTCF.dwt: Contains the DWT flat file as generated from the set input sequences. In this example, the DWT flat
+       file has 'CTCF' as the TF name in the first line.
+

@@ -1,0 +1,8 @@
+#background
+A       0.180660
+C       0.319340
+G       0.319340
+T       0.180660
+
+#output_file
+CTCF_results.txt

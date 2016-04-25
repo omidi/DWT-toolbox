@@ -1,0 +1,32 @@
+This directory contains DWT flat files as the input parameters for running the positional dependency program. It is ass-
+umed that the source code has been properly compiled. If not, see the '../../Source/README' or '../../manual.txt'.
+
+
+Input files:
+------------
+CTCF.dwt = DWT flat file that contains the binding specificity model for CTCF under the DWT model.
+
+CEBPB.dwt = DWT flat file that contains the binding specificity model for CEBPB under the DWT model.
+
+
+Example
+---------
+It is Assumed that the binary file of the posterior dependency program, called 'positional_dependency_posterior', is pl-
+aced at '../../Source/'. To run the program, execute the following command:
+
+../../Source/positional_Dependency_Posterior CTCF.dwt > CTCF.post
+
+output file:
+       Since the output of the program is printed out in the terminal, we are redirecting the output into 'CTCF.post'
+       file at the current working directory. There are three columns in the output, first two columns indicate the
+       index of the position in the binding site (first position has index 1). The third column gives the posterior
+       probability of positional dependency between the two pairs of positions. The number of lines in the output file
+       is N*(N-1)/2, which N is the size of the binding site. In the case of CTCF, N=20, hence there are 190 pairs of
+       positions.
+
+
+In the same way we can run the program for another DWT flat file, here CEBPB.dwt: 
+
+../../Source/positional_Dependency_Posterior CEBPB.dwt > CEBPB.post
+
+where the output file contains 66 pairs of positions (N=12 for CEBPB). 
