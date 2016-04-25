@@ -13,10 +13,10 @@ make all
 Note that first the boost library will be uncompressed, and consequently the source codes will be compiled. After running
 this command, the following executables will be found in the `Source` directory.
 
-*DWT_TFBS_prediction: For scanning and calculating TF binding score for a set of DNA sequences under the DWT model.
-*positional_dependency_posterior: For calculating the posterior of positional dependency between pairs of positions within
+* DWT_TFBS_prediction: For scanning and calculating TF binding score for a set of DNA sequences under the DWT model.
+* positional_dependency_posterior: For calculating the posterior of positional dependency between pairs of positions within
 TF binding sites (TFBSs).
-*motevo: A program for TFBS identification under the classical weight matrix model. For more information see the original
+* motevo: A program for TFBS identification under the classical weight matrix model. For more information see the original
   [paper](http://www.ncbi.nlm.nih.gov/pubmed/22334039).
 
 
