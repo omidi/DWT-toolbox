@@ -23,10 +23,10 @@ TF binding sites (TFBSs).
 ## Python scripts
 We have implemented several functionalities in Python (ver 2.70). This includes:
 
-*diLogo.py: For generating diLogo, a graphical representation of binding specificity under the positional dependency
+* diLogo.py: For generating diLogo, a graphical representation of binding specificity under the positional dependency
 model.
-*generate_DWT_model.py: For generating a DWT flat file, given a set of k-mers.
-*fitting_DWT_model.py: A pipeline for fitting a DWT model give a set of DNA sequences and an initial WM model.
+* generate_DWT_model.py: For generating a DWT flat file, given a set of k-mers.
+* fitting_DWT_model.py: A pipeline for fitting a DWT model give a set of DNA sequences and an initial WM model.
 
 For running this scripts, it is required to have  `pip` amd  `argparse` installed. To that end, user can simply execute
 the following commands:
