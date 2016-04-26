@@ -94,10 +94,25 @@ def run(cmd):
     return None
 
 
+def motevoCompatibleFastaFile(dest, filename):
+    res_filename = os.path.join(dest, 'intermediate_results' ,'%s_motevo_compatible' % os.path.basename(filename) )
+    res = open(res_filename, 'w')
+    with open(filename) as inf:
+        while True:
+            seq_id = inf.readline()
+            if not seq_id:
+                break
+            res.write('>%s' % seq_id)
+            res.write(inf.readline())
+    res.close()
+    return res_filename
+
+
 def runMotevo(args, paramFile, program_dir = ""):
     prog = os.path.join(program_dir, 'motevo')
+    fasta_file = motevoCompatibleFastaFile(args.output_dir, args.fasta_file)
     cmd = ' '.join([prog,
-                    args.fasta_file,
+                    fasta_file,
                     paramFile,
                     args.WM
                     ])
@@ -107,6 +122,7 @@ def runMotevo(args, paramFile, program_dir = ""):
         print 'Program halts! '
         exit()
     run('rm wms.updated')
+    run(fasta_file)
     return 0
 
 
@@ -355,7 +371,6 @@ def clean_up_directory(args, last_iteration, TF):
     curr_dir = os.getcwd()
     if args.output_dir:
         os.chdir(args.output_dir)
-    run('mkdir intermediate_results')
     run('mv * intermediate_results/.')
     run('cp intermediate_results/dwt_%d %s.dwt' % (last_iteration, TF))
     run('cp intermediate_results/alg_%d %s.alg' % (last_iteration, TF))
@@ -400,6 +415,7 @@ def main():
     args =arguments()
     if args.output_dir:
         mkdir(args.output_dir)
+        mkdir(os.path.join(args.output_dir, 'intermediate_results'))
     program_dir = os.path.dirname(sys.argv[0])
     if not args.TF:
         TF = os.path.basename(args.WM).split('.')[0]
