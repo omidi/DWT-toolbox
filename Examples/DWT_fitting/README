@@ -1,18 +1,18 @@
 This directory contains input files, parameter file for running the program responsible for fitting the DWT model. It is
-assumed that the dependencies are compiled as reside in their directories, as well as the Python code is properly running.
-For more information, see the ''../../manual.txt'' file.
+assumed that the dependencies are compiled as reside in their directories, as well as Python scripts are running. For m-
+ore information, see the ''../../manual.txt'' file.
 
 
 Input files:
 ------------
 CEBPB.wm =  Position-specific weight matrix (PSWM) file for CEBPB.
 
-CEBPB.fasta = A set of DNA sequences that are provided in the FASTA format. These sequences have been obtained from the
+CEBPB.fasta = A set of DNA sequences that are provided in the FASTA format.  These sequences have been obtained from the
               ENCODE ChIP-seq experiment for CEBPB. This WM is obtained from the SwissRegulon database.
 
 BHLHE.wm = A PSWM file for BHLHE. The PSWM file is obtained from the SwissRegulon database.
 
-BHLHE.fasta = A set of DNA sequences that are provided in the FASTA format. These sequences have been obtained from the
+BHLHE.fasta = A set of DNA sequences that are provided in the FASTA format.  These sequences have been obtained from the
               ENCODE ChIP-seq experiment for BHLHE.
 
 
@@ -31,56 +31,47 @@ background nucleotide model is used for calculating the  PSWM and DWT scores. Th
 the -t option, even though that is an optional parameter. Finally, we are running the program in the verbose mode as sp-
 ecified by the -v option). Upon running the above command, following output should appear on the screen:
 
+
 number of identified TFBS in iteration 1 is 177
 *****************************
-difference at round 2 is 0.717168
-number of identified TFBS in this iteration is 117
+difference at round 2 is 0.229356
+number of identified TFBS in this iteration is 271
 *****************************
-difference at round 3 is 0.335371
-number of identified TFBS in this iteration is 137
+difference at round 3 is 0.132021
+number of identified TFBS in this iteration is 304
 *****************************
-difference at round 4 is 0.202874
-number of identified TFBS in this iteration is 139
+difference at round 4 is 0.267393
+number of identified TFBS in this iteration is 304
 *****************************
-difference at round 5 is 0.724819
-number of identified TFBS in this iteration is 137
+difference at round 5 is 0.300713
+number of identified TFBS in this iteration is 299
 *****************************
-difference at round 6 is 0.332922
-number of identified TFBS in this iteration is 137
+difference at round 6 is 0.125428
+number of identified TFBS in this iteration is 295
 *****************************
-difference at round 7 is 0.101635
-number of identified TFBS in this iteration is 136
+difference at round 7 is 0.320713
+number of identified TFBS in this iteration is 291
 *****************************
-difference at round 8 is 0.333072
-number of identified TFBS in this iteration is 136
+difference at round 8 is 0.359403
+number of identified TFBS in this iteration is 287
 *****************************
-difference at round 9 is 0.721899
-number of identified TFBS in this iteration is 135
+difference at round 9 is 0.058058
+number of identified TFBS in this iteration is 286
 *****************************
-difference at round 10 is 0.107464
-number of identified TFBS in this iteration is 135
+difference at round 10 is 0.017221
+number of identified TFBS in this iteration is 286
 *****************************
-difference at round 11 is 0.845778
-number of identified TFBS in this iteration is 134
-*****************************
-difference at round 12 is 0.047266
-number of identified TFBS in this iteration is 134
-*****************************
-difference at round 13 is 0.021940
-number of identified TFBS in this iteration is 134
-*****************************
-difference at round 14 is 0.009278
-number of identified TFBS in this iteration is 134
-*****************************
+difference at round 11 is 0.005919
+number of identified TFBS in this iteration is 286
 
 
 First line shows how many TF binding sites (TFBSs) are being identified after using the input PSWM model. Since the min-
-imum posterior parameter is not given, it is assumed by default a minimum posterior of 0.5. Following that, a DWT model
-is built on the selected TFBSs, and it is used for identifying new TFBSs. In the second round a set containing 117 TFBS
+imum posterior parameter is not given,  it is assumed by default a minimum posterior of 0.5. Following that, a DWT model
+is built on the selected TFBSs,  and it is used for identifying new TFBSs. In the second round a set containing 271 TFBS
 were identified. We are comparing the dinucleotide frequency matrix of the two consequent rounds as a measure for conve-
 rgence. The iteration is converged if the distance between the two dinucleotide matrices are smaller than 0.05. This pr-
-ocedure continues iteratively  until 14th iteration where the distance is 0.009278 (below <0.05). At the final iteration
-134 TFBS were identified and stored in the CEBPB.alg in the CEBPB directory.
+ocedure continues iteratively  until 11th iteration where the distance is 0.005919 (below <0.05). At the final iteration
+286 TFBS were identified and stored in the CEBPB.alg in the CEBPB directory.
 
 
 output files are stored in CEBPB directory as includes:
@@ -108,53 +99,24 @@ verbose mode (-v option). Upon running the above command, following output shoul
 
 number of identified TFBS in iteration 1 is 1231
 *****************************
-difference at round 2 is 0.415508
-number of identified TFBS in this iteration is 999
+difference at round 2 is 0.920669
+number of identified TFBS in this iteration is 1978
 *****************************
-difference at round 3 is 0.220662
-number of identified TFBS in this iteration is 1171
+difference at round 3 is 0.257377
+number of identified TFBS in this iteration is 2235
 *****************************
-difference at round 4 is 0.041347
-number of identified TFBS in this iteration is 1225
+difference at round 4 is 0.072601
+number of identified TFBS in this iteration is 2394
 *****************************
-difference at round 5 is 0.063144
-number of identified TFBS in this iteration is 1307
-*****************************
-difference at round 6 is 0.057342
-number of identified TFBS in this iteration is 1402
-*****************************
-difference at round 7 is 0.036933
-number of identified TFBS in this iteration is 1469
-*****************************
-difference at round 8 is 0.039666
-number of identified TFBS in this iteration is 1568
-*****************************
-difference at round 9 is 0.010597
-number of identified TFBS in this iteration is 1675
-*****************************
-difference at round 10 is 0.033256
-number of identified TFBS in this iteration is 1843
-*****************************
-difference at round 11 is 0.139190
-number of identified TFBS in this iteration is 2050
-*****************************
-difference at round 12 is 0.033344
-number of identified TFBS in this iteration is 2330
-*****************************
-difference at round 13 is 0.073715
-number of identified TFBS in this iteration is 2750
-*****************************
-difference at round 14 is 0.079776
-number of identified TFBS in this iteration is 3079
-*****************************
-difference at round 15 is 0.007437
-number of identified TFBS in this iteration is 3268
+difference at round 5 is 0.027908
+number of identified TFBS in this iteration is 2579
 *****************************
 
 
-The output log shows the number of the predicted TFBSs at each iteration of the fitting. In addition, it shows at each
-iteration the distance of a dinucleotide matrix from the currently predicted TFBSs and the previous set. Upon convergence
-(distance < 0.05), the program stops and the results will be stored in BHLHE directory.
+The output log shows the number of the predicted TFBSs at each iteration of the fitting.  In addition,  it shows that at
+each iteration the distance of a dinucleotide matrix from the currently predicted TFBSs and the previous set. Upon conv-
+ergence (distance < 0.05), the program stops and the results will be stored in BHLHE directory. In final round, the pro-
+gram predicted 2579 TFBSs.
 
 output files in BHLHE directory:
     BHLHE.dwt: DWT flat file for BHLHE.

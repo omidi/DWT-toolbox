@@ -29,4 +29,4 @@ In the same way we can run the program for another DWT flat file, here CEBPB.dwt
 
 ../../Source/positional_Dependency_Posterior CEBPB.dwt > CEBPB.post
 
-where the output file contains 66 pairs of positions (N=12 for CEBPB). 
+where the output file contains 66 pairs of positions (N=12 for CEBPB).
