@@ -67,7 +67,7 @@ void dummy();
 
 /***** structure definitions *****/
 const char digits[11]="0123456789";
-const int treelength = 8192;
+
 
 typedef struct {
   char name[1024];
@@ -123,9 +123,9 @@ reducedtreenode **reducedtree;
 
 
 /**************** FUNCTION DECLARATIONS *************/
-int read_param_file(char *filename,char *refspecies,char *ttreestring,int *em_prior,int *em_wm,int *do_segment,int *seglen,int *bgorder,double *otherwmprior,double *bgprior,int *restrictparses,char *otherwmfile,char *sitefile,char *priorfile,char *loglikfile,char *column_statfile,char *cons_statfile,char *mutcountfile,char *segfile,double *minposterior,int *printsiteals,char *otherwm_proffile,int *proflen, int *do_ep, double *priordiff, double *wmdiff, int *winlen, int *steplen, int *do_evo, int *markov_order,char *epfilename, int *useproximities,char *mode, double *minposteriorWM, int *UFEprint, char *mybgfile);
+int read_param_file(char *filename,char *refspecies,char *treestring,int *em_prior,int *em_wm,int *do_segment,int *seglen,int *bgorder,double *otherwmprior,double *bgprior,int *restrictparses,char *otherwmfile,char *sitefile,char *priorfile,char *column_statfile,char *cons_statfile,char *mutcountfile,char *segfile,double *minposterior,int *printsiteals,char *otherwm_proffile,int *proflen, int *do_ep, double *priordiff, double *wmdiff, int *winlen, int *steplen, int *do_evo, int *markov_order,char *epfilename, int *useproximities,char *mode, double *minposteriorWM, int *UFEprint, char *mybgfile);
 void mychomp(char *s);
-int parsetree(char *ttreestring,treenode **nodelist,char *refspecies, int prox);
+int parsetree(char *treestring,treenode **nodelist,char *refspecies, int prox);
 int read_bg_filenames(char *filename,char **bgfiles,int numnodes,treenode **nodelist);
 int countwms(char *filename);
 int readwms(char *filename,wm *wms,int *num_with_prior,double *wm_prior_sum);
@@ -252,10 +252,10 @@ void EXPforwardbackward(alignment *al,double **prob,double **probrev,treenode **
 int main(int argc, char *argv[]) {
 
   
-  FILE *wmfile,*priorfp,*sitefp,*segfp,*loglikfp;
+  FILE *wmfile,*priorfp,*sitefp,*segfp;
   treenode **nodelist;
   char refspecies[1024];
-  char epfilename[1024],otherwmfile[1024],sitefile[1024],priorfile[1024],loglikfile[1024],column_statfile[1024],cons_statfile[1024],mutcountfile[1024],segfile[1024],otherwm_proffile[1024];
+  char epfilename[1024],otherwmfile[1024],sitefile[1024],priorfile[1024],column_statfile[1024],cons_statfile[1024],mutcountfile[1024],segfile[1024],otherwm_proffile[1024];
   char treestring[8192];
   int useproximities = 0;
   char **bgfiles;
@@ -284,13 +284,13 @@ int main(int argc, char *argv[]) {
   strcpy(otherwmfile,"");
   strcpy(sitefile,"");
   strcpy(priorfile,"");
-  strcpy(loglikfile,"");
   strcpy(column_statfile,"");
   strcpy(cons_statfile,"");
   strcpy(mutcountfile,"");
   strcpy(otherwm_proffile,"");
   strcpy(mode,"bsp");
   strcpy(mybgfile,"");
+  strcpy(segfile,"");
 
   postcounts = NULL;
   orgpostcounts = NULL;
@@ -313,7 +313,7 @@ int main(int argc, char *argv[]) {
   }
   
   /** read parameter file ****/
-  if(read_param_file(argv[2],refspecies,treestring,&em_prior,&em_wm,&do_segment,&seglen,&bgorder,&otherwmprior,&bgprior,&restrictparses,otherwmfile,sitefile,priorfile,loglikfile,column_statfile,cons_statfile,mutcountfile,segfile,&minposterior,&printsiteals,otherwm_proffile,&proflen,&do_ep,&diffprior,&diffwm,&winlen,&steplen,&do_evo,&markovorder,epfilename,&useproximities,mode,&minposteriorWM,&UFEprint,mybgfile))
+  if(read_param_file(argv[2],refspecies,treestring,&em_prior,&em_wm,&do_segment,&seglen,&bgorder,&otherwmprior,&bgprior,&restrictparses,otherwmfile,sitefile,priorfile,column_statfile,cons_statfile,mutcountfile,segfile,&minposterior,&printsiteals,otherwm_proffile,&proflen,&do_ep,&diffprior,&diffwm,&winlen,&steplen,&do_evo,&markovorder,epfilename,&useproximities,mode,&minposteriorWM,&UFEprint,mybgfile))
     {
       fprintf(stderr,"Error reading parameter file\n");
       return 1;
@@ -917,8 +917,7 @@ int main(int argc, char *argv[]) {
 	    
 	    /* print wms and priors */
 	    /* write weight matrix to file  */
-	    char pwmfile[1024];
-	    strcpy(pwmfile,"wms.updated");
+	    const char *pwmfile = "wms.updated";
 	    FILE *pwmfp = fopen(pwmfile, "w");
 	    for (j=0; j<numwms; ++j) {
 	      
@@ -987,10 +986,6 @@ int main(int argc, char *argv[]) {
       {
 	sitefp = fopen(sitefile,"w");
       }
-    if(strcmp(loglikfile,"") != 0)
-      {
-	loglikfp = fopen(loglikfile,"w");
-      }
     if(strcmp(segfile,"") != 0)
       {
 	segfp = fopen(segfile,"w");
@@ -1009,17 +1004,18 @@ int main(int argc, char *argv[]) {
 	  forwardbackward_nth(alignments+i,prob,probrev,nodelist,wms,restrictparses,otherwm,Z,numwms,Y);
 	//forwardbackward(alignments+i,prob,probrev,nodelist,wms,restrictparses,otherwm,Z,numwms);
 
+	/*
+	double tF = 0.0;
+	double tB = 0.0;
+	for(int b=0;b<alignments[i].len;b++) {
 
-	if(strcmp(loglikfile,"") != 0)
-	  {
-	    /**calculate log-likelihood of this sequence***/
-	    double tF = 0.0;
-	    for(int b=0;b<alignments[i].len;b++) {
-	      tF += log(Z[b]);
-	    }
-	    /***now print line in the file***/
-	    fprintf(loglikfp,"%s %lf\n",alignments[i].specnames[0],tF);
-	  }
+	  tF += log(Z[b]);
+	  tB += log(Y[b]);
+	}
+	double diff = tF-tB;
+	//if( diff>0.00000000001 )
+	  fprintf(stderr,"%s [%i]\tdiff = %g \t F = %g \t B = %g\n",alignments[i].specnames[0],i,diff,tF,tB);
+	*/
 	 
 	if(strcmp(sitefile,"") != 0)
 	  {
@@ -1039,10 +1035,6 @@ int main(int argc, char *argv[]) {
     if(strcmp(segfile,"") != 0)
       {
 	fclose(segfp);
-      }
-    if(strcmp(loglikfile,"") != 0)
-      {
-	fclose(loglikfp);
       }
     
     /**print out priors if requested****/
@@ -3600,11 +3592,10 @@ int countwms(char *filename)
 }
 
 
-int read_param_file(char *filename,char *refspecies,char *ttreestring,int *em_prior,int *em_wm,int *do_segment,int *seglen,int *bgorder,double *otherwmprior,double *bgprior,int *restrictparses,char *otherwmfile,char *sitefile,char *priorfile,char *loglikfile,char *column_statfile,char *cons_statfile,char *mutcountfile,char *segfile,double *minposterior,int *printsiteals,char *otherwm_proffile, int *proflen, int *do_ep, double *priordiff, double *wmdiff, int *winlen, int *steplen, int *do_evo,int *markov_order,char *epfilename, int *useproximities,char *mode, double *minposteriorWM, int *UFEprint, char *mybgfile)
+int read_param_file(char *filename,char *refspecies,char *treestring,int *em_prior,int *em_wm,int *do_segment,int *seglen,int *bgorder,double *otherwmprior,double *bgprior,int *restrictparses,char *otherwmfile,char *sitefile,char *priorfile,char *column_statfile,char *cons_statfile,char *mutcountfile,char *segfile,double *minposterior,int *printsiteals,char *otherwm_proffile, int *proflen, int *do_ep, double *priordiff, double *wmdiff, int *winlen, int *steplen, int *do_evo,int *markov_order,char *epfilename, int *useproximities,char *mode, double *minposteriorWM, int *UFEprint, char *mybgfile)
 {
-
   FILE *paramfile;
-  char s[treelength],keyword[256],letter;
+  char s[1024],keyword[256],letter;
   int i;
   int gotrefspecies = 0;
   double val;
@@ -3616,7 +3607,7 @@ int read_param_file(char *filename,char *refspecies,char *ttreestring,int *em_pr
       return 1;
     }
   /**reading the file****/
-  while (fgets(s,treelength,paramfile)) /**get line from the file***/
+  while (fgets(s,1024,paramfile)) /**get line from the file***/
     {
       mychomp(s);
       /**read up to first space***/
@@ -3747,7 +3738,7 @@ int read_param_file(char *filename,char *refspecies,char *ttreestring,int *em_pr
 	    {
 	      ++i;
 	    }
-	  strcpy(ttreestring,s+i);
+	  strcpy(treestring,s+i);
 	}
       else if(strcmp(keyword,"Mode") == 0)
 	{
@@ -3863,14 +3854,6 @@ int read_param_file(char *filename,char *refspecies,char *ttreestring,int *em_pr
 	      ++i;
 	    }
 	  strcpy(priorfile,s+i);
-	}
-      else if(strcmp(keyword,"loglikfile") == 0)
-	{
-	  while(isspace(s[i]) && s[i] != '\0')
-	    {
-	      ++i;
-	    }
-	  strcpy(loglikfile,s+i);
 	}
       else if(strcmp(keyword,"CRMfile") == 0)
 	{
@@ -4034,18 +4017,18 @@ int read_bg_filenames(char *filename,char **bgfiles,int numnodes,treenode **node
 
 
 /*********parse the input tree******************/
-int parsetree(char *ttreestring,treenode **nodelist,char *refspecies, int prox)
+int parsetree(char *treestring,treenode **nodelist,char *refspecies, int prox)
 {
   treenode *thisnode, *descendant;
   treenode **rawlist;
-  char numstring[treelength],tmpstr[treelength];
+  char numstring[256],tmpstr[256];
   int numpos,absindex,nodeindex;
   int level = 0;
   int maxlevel =0;
   int pos = 1;
   int found = 0;
 
-  if(ttreestring[0] != '(')
+  if(treestring[0] != '(')
     {
       fprintf(stderr,"Error: treestring should start with (\n");
       return 1;
@@ -4061,9 +4044,9 @@ int parsetree(char *ttreestring,treenode **nodelist,char *refspecies, int prox)
   ++nodeindex;
 
   pos = 1;
-  while(ttreestring[pos] != ';' && ttreestring[pos] != '\0')
+  while(treestring[pos] != ';' && treestring[pos] != '\0')
     {
-      if(ttreestring[pos] == '(') /***new subtree****/
+      if(treestring[pos] == '(') /***new subtree****/
 	{
 	  ++level;
 	  descendant = (treenode *) malloc(sizeof(treenode));
@@ -4075,19 +4058,19 @@ int parsetree(char *ttreestring,treenode **nodelist,char *refspecies, int prox)
 	  ++nodeindex;
 	  ++pos;
 	}
-      else if(ttreestring[pos] == ')') /***end subtree ***/
+      else if(treestring[pos] == ')') /***end subtree ***/
 	{
 	  thisnode = thisnode->parent;
 	  --level;
 	  ++pos;
 	}
-      else if(ttreestring[pos] == ':') /** proximity parent current node ***/
+      else if(treestring[pos] == ':') /** proximity parent current node ***/
 	{
 	  numpos = 0;
 	  ++pos;
-	  while(isdigit(ttreestring[pos]) || ttreestring[pos] == '.' || isspace(ttreestring[pos]))
+	  while(isdigit(treestring[pos]) || treestring[pos] == '.' || isspace(treestring[pos]))
 	    {
-	      numstring[numpos] = ttreestring[pos];
+	      numstring[numpos] = treestring[pos];
 	      ++numpos;
 	      ++pos;
 	    }
@@ -4098,13 +4081,13 @@ int parsetree(char *ttreestring,treenode **nodelist,char *refspecies, int prox)
 
 	  thisnode->q = qtmp;
 	}
-      else if(ttreestring[pos] == ',') /** comma separates nodes at same level, return to parent ***/
+      else if(treestring[pos] == ',') /** comma separates nodes at same level, return to parent ***/
 	{
 	  thisnode = thisnode->parent; /***move to the parent***/
 	  --level;
 	  ++pos;
 	}
-      else if(!isspace(ttreestring[pos]))/**any other nonspace character is considered name of string ***/
+      else if(!isspace(treestring[pos]))/**any other nonspace character is considered name of string ***/
 	{
 	  /**we are getting a leaf****/
 	  descendant = (treenode *) malloc(sizeof(treenode));
@@ -4118,9 +4101,9 @@ int parsetree(char *ttreestring,treenode **nodelist,char *refspecies, int prox)
 	  rawlist[nodeindex] = thisnode;
 	  ++nodeindex;
 	  numpos = 0;
-	  while(ttreestring[pos] != '(' && ttreestring[pos] != ')' && ttreestring[pos] != ':' && ttreestring[pos] != ',')
+	  while(treestring[pos] != '(' && treestring[pos] != ')' && treestring[pos] != ':' && treestring[pos] != ',')
 	    {
-	      thisnode->name[numpos] = ttreestring[pos];
+	      thisnode->name[numpos] = treestring[pos];
 	      ++pos;
 	      ++numpos;
 	    }
@@ -5905,7 +5888,7 @@ double ratiocolumn_nth(alignment *al,int pos, char *column,double *w,reducedtree
 
 
   int **kids; // to get for each node its leafs (the bases of the species)
-  kids = (int **) calloc(numnodes,sizeof(int *)); // we know that the root has all species as leafs/children
+  kids = (int **) calloc(numnodes-1,sizeof(int *)); // we know that the root has all species as leafs/children
   for(j=0;j<numnodes;++j)
     kids[j] = (int *)calloc(numspec,sizeof(int ));
 
@@ -6068,7 +6051,7 @@ double ratiocolumnforward_nth(alignment *al,int pos, char *column,double *w,redu
 
 
   int **kids; // to get for each node its leafs (the bases of the species)
-  kids = (int **) calloc(numnodes,sizeof(int *)); // we know that the root has all species as leafs/children
+  kids = (int **) calloc(numnodes-1,sizeof(int *)); // we know that the root has all species as leafs/children
   for(j=0;j<numnodes;++j)
     kids[j] = (int *)calloc(numspec,sizeof(int ));
 

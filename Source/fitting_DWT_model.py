@@ -22,26 +22,24 @@ def arguments():
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
 
     parser.add_argument('-w', '--wm', dest='WM',
-                      help=textwrap.fill(textwrap.dedent("""A normal weight matrix file, for formatting please check out
-                      the manual.txt file"""), width=70, break_long_words=True, break_on_hyphens=True), \
+                      help="""A normal weight matrix file, for formatting please check out the manual.txt file""",
                       action='store', type=str,  metavar='\b', required=True)
     parser.add_argument('-f' , '--fasta', dest='fasta_file' ,
                       help="""A DNA FASTA file""", \
                       action='store', type=str,  metavar='\b', required=True)
     parser.add_argument('-o' , '--outdir', dest='output_dir' ,
-                      help=textwrap.fill(textwrap.dedent("""Optional input for the output directory. if not provided,
-                      the current working directory will be used as the output directory.
-                      In order to secure the local files, it is, however, recommended to
-                      specify the output directory."""), width=70, break_long_words=True, break_on_hyphens=False), \
-                      action='store', type=str, required=False,  metavar='\b')
+                      help="""Optional input for the output directory. if not provided, the current working directory
+                      will be used as the output directory. In order to secure the local files, it is
+                      recommended to specify the output directory.""", action='store', type=str, required=False,
+                      metavar='\b')
     parser.add_argument('-b', '--with_bg', action='store_true', default=False,
-                      help=textwrap.fill(textwrap.dedent("""Whether the nucleotide background frequency is set according
+                      help="""Whether the nucleotide background frequency is set according
                       to the provided DNA sequences. But if not used, a uniform background
                       frequency will be used.
-                      """), width=70, break_long_words=True, break_on_hyphens=False), dest='with_background')
+                      """, dest='with_background')
     parser.add_argument('-p', '--min_post', action='store', required=False, metavar='\b',
-                        help=textwrap.fill(textwrap.dedent("""Optional minimum posterior cutoff, for selecting TFBS at each
-                             round of iteration. (Default 0.5)"""), width=70, break_long_words=True, break_on_hyphens=False),
+                        help="""Optional minimum posterior cutoff, for selecting TFBS at each
+                             round of iteration. (Default 0.5)""",
                         dest="min_post", type=float, default=0.5)
     parser.add_argument('-t', '--tf', action='store', metavar='\b', required=False,
                         help="""Optional TF name, if not given the TF name is assumed to be
@@ -71,8 +69,8 @@ def mkdir(name):
             # sys.stderr.write ( "\nWarning in creating directory\n")
             # print '\tstderr:', repr(stderr_value.rstrip())
             print "The output directory %s already exists." % name
-            print """The program continues, but it may remove/change file(s) that are
-            already in %s directory""" % name
+            print """The program continues, but it may remove/change file(s) that are already in
+            %s directory""" % name
             None
         else:
              sys.stderr.write ( "\nError in creating directory REGIONS\n" )
@@ -94,6 +92,18 @@ def run(cmd):
     return None
 
 
+def run_with_output(cmd):
+    proc = subprocess.Popen (cmd,
+                                stdout=subprocess.PIPE,
+                                stderr=subprocess.PIPE,
+                                shell=True
+                         )
+    stdout_value, stderr_value = proc.communicate()
+    if proc.poll() > 0:
+        return stderr_value.rstrip()
+    return stdout_value
+
+
 def motevoCompatibleFastaFile(dest, filename):
     res_filename = os.path.join(dest, 'intermediate_results' ,'%s_motevo_compatible' % os.path.basename(filename) )
     res = open(res_filename, 'w')
@@ -102,7 +112,7 @@ def motevoCompatibleFastaFile(dest, filename):
             seq_id = inf.readline()
             if not seq_id:
                 break
-            res.write('>%s' % seq_id)
+            res.write('>>nullpsec_%s' % seq_id.replace('>', ''))
             res.write(inf.readline())
     res.close()
     return res_filename
@@ -121,8 +131,8 @@ def runMotevo(args, paramFile, program_dir = ""):
         print 'command: %s' % cmd
         print 'Program halts! '
         exit()
+    run('rm %s' % fasta_file)
     run('rm wms.updated')
-    run(fasta_file)
     return 0
 
 
@@ -130,15 +140,13 @@ def motevoParamFile(fileName, motifLength, TFname, args):
     paramFile = open(fileName, 'w')
     if not args.with_background:
         paramFile.write('\n'.join(['Mode WMREF',
-                                   'refspecies hg19',
-                                   'TREE (hg19:1);',
-                                   'wmdiff 0.05',
+                                   'refspecies nullpsec',
+                                   'TREE (nullpsec:1);',
                                    'EMprior 1',
                                    'priordiff 0.01',
                                    'markovorderBG 0',
-                                   'bgprior 0.999',
+                                   'bgprior 0.99',
                                    'bg A 0.25', 'bg T 0.25', 'bg C 0.25', 'bg G 0.25',
-                                   'restrictparses 0',
                                    'sitefile %s' % os.path.join(args.output_dir, 'sites'),
                                    'priorfile %s' % os.path.join(args.output_dir, 'priors'),
                                    'minposterior %f' % args.min_post,
@@ -146,18 +154,12 @@ def motevoParamFile(fileName, motifLength, TFname, args):
                                    ]))
     else:
         paramFile.write('\n'.join(['Mode WMREF',
-                                   'refspecies hg19',
-                                   'TREE (hg19:1);',
-                                   'wmdiff 0.05',
+                                   'refspecies nullpsec',
+                                   'TREE (nullpsec:1);',
                                    'EMprior 1',
                                    'priordiff 0.01',
                                    'markovorderBG 0',
-                                   'bgprior 0.999',
-                                   'bg A %0.5f' % args.background['A'],
-                                   'bg C %0.5f' % args.background['C'],
-                                   'bg G %0.5f' % args.background['G'],
-                                   'bg T %0.5f' % args.background['T'],
-                                   'restrictparses 0',
+                                   'bgprior 0.99',
                                    'sitefile %s' % os.path.join(args.output_dir, 'sites'),
                                    'priorfile %s' % os.path.join(args.output_dir, 'priors'),
                                    'minposterior %f' % args.min_post,
@@ -413,6 +415,26 @@ def generate_diLogo(args, TF, program_dir=''):
 
 def main():
     args =arguments()
+
+    # Checking the input DNA sequences -- FASTA file
+    # First if the total number of DNA sequences is too large, warn the user
+    # Then, check out the average size of each DNA sequences, for very long DNA
+    # sequences warn the user for reducing the size of DNA sequences for a better
+    # result.
+    number_of_sequences = int(run_with_output('wc %s' % args.fasta_file).split()[0])/2
+    if number_of_sequences > 1000:
+        sys.stderr.write("\nWarning: There are in total %d DNA sequences are given.\n")
+        print """For the program to reliably converge, it is recommended that the number of sequence to be limited to
+         less than 1000 total sequences. """
+
+    total_molecule = float(run_with_output("sed '1d; n; d' %s | wc " % args.fasta_file).split()[-1])
+    average_seq_length = total_molecule / number_of_sequences
+    if average_seq_length > 500:
+        sys.stderr.write("\nWarning: The average length of DNA sequences is %0.2f.\n" % average_seq_length)
+        print """For a more reliable performance, it is highly recommended that the average size of DNA sequences to be
+        limited to less than 500 bp. """
+
+    # Making the output directories
     if args.output_dir:
         mkdir(args.output_dir)
         mkdir(os.path.join(args.output_dir, 'intermediate_results'))
@@ -428,6 +450,10 @@ def main():
     iteration = 1
     copyWM(args, TF, program_dir)
     alg_file, alg_1 = process_motevo_output(args)
+    if len(alg_1) < 20:
+        print "Only %d sites were identified using the provided WM." % len(alg_1)
+        print """Since this too few sites for confidently training a DWT model, the program stops!"""
+        exit()
     if args.verbose:
         print "number of identified TFBS in iteration 1 is %d" % len(alg_1)
         print "*****************************"
@@ -447,7 +473,12 @@ def main():
             print "*****************************"
         alg_1 = alg_2
         alg_2 = None
-    iteration=5
+
+        if iteration > 50:
+            sys.stderr.write("""\nWarning: The program seems to be not converging. Program stops, but the results can be
+             found in the %s directory""" % args.output_dir)
+            break
+
     clean_up_directory(args, iteration, TF)
     calculate_PS_posterior(args, TF, program_dir)
     generate_diLogo(args, TF, program_dir)

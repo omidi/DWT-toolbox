@@ -32,37 +32,44 @@ the -t option, even though that is an optional parameter. Finally, we are runnin
 ecified by the -v option). Upon running the above command, following output should appear on the screen:
 
 
-number of identified TFBS in iteration 1 is 177
+number of identified TFBS in iteration 1 is 213
 *****************************
-difference at round 2 is 0.229356
-number of identified TFBS in this iteration is 271
+difference at round 2 is 0.049681
+number of identified TFBS in this iteration is 277
 *****************************
-difference at round 3 is 0.132021
-number of identified TFBS in this iteration is 304
+difference at round 3 is 0.062811
+number of identified TFBS in this iteration is 316
 *****************************
-difference at round 4 is 0.267393
-number of identified TFBS in this iteration is 304
+difference at round 4 is 0.119385
+number of identified TFBS in this iteration is 322
 *****************************
-difference at round 5 is 0.300713
-number of identified TFBS in this iteration is 299
+difference at round 5 is 0.076294
+number of identified TFBS in this iteration is 324
 *****************************
-difference at round 6 is 0.125428
-number of identified TFBS in this iteration is 295
+difference at round 6 is 0.325844
+number of identified TFBS in this iteration is 323
 *****************************
-difference at round 7 is 0.320713
-number of identified TFBS in this iteration is 291
+difference at round 7 is 0.174682
+number of identified TFBS in this iteration is 319
 *****************************
-difference at round 8 is 0.359403
-number of identified TFBS in this iteration is 287
+difference at round 8 is 0.348544
+number of identified TFBS in this iteration is 316
 *****************************
-difference at round 9 is 0.058058
-number of identified TFBS in this iteration is 286
+difference at round 9 is 0.084304
+number of identified TFBS in this iteration is 318
 *****************************
-difference at round 10 is 0.017221
-number of identified TFBS in this iteration is 286
+difference at round 10 is 0.160653
+number of identified TFBS in this iteration is 317
 *****************************
-difference at round 11 is 0.005919
-number of identified TFBS in this iteration is 286
+difference at round 11 is 0.051158
+number of identified TFBS in this iteration is 318
+*****************************
+difference at round 12 is 0.019794
+number of identified TFBS in this iteration is 318
+*****************************
+difference at round 13 is 0.007981
+number of identified TFBS in this iteration is 318
+*****************************
 
 
 First line shows how many TF binding sites (TFBSs) are being identified after using the input PSWM model. Since the min-
@@ -96,22 +103,62 @@ re explicitly specified 0.3 as the minimum posterior (option -p)  for selecting 
 background nucleotide frequency is set to a uniform distribution for all bases. Finally,  we are running the  program in
 verbose mode (-v option). Upon running the above command, following output should appear on the screen:
 
-
-number of identified TFBS in iteration 1 is 1231
+number of identified TFBS in iteration 1 is 3441
 *****************************
-difference at round 2 is 0.920669
-number of identified TFBS in this iteration is 1978
+difference at round 2 is 1.205832
+number of identified TFBS in this iteration is 7150
 *****************************
-difference at round 3 is 0.257377
-number of identified TFBS in this iteration is 2235
+difference at round 3 is 0.603752
+number of identified TFBS in this iteration is 9345
 *****************************
-difference at round 4 is 0.072601
-number of identified TFBS in this iteration is 2394
+difference at round 4 is 0.367309
+number of identified TFBS in this iteration is 10490
 *****************************
-difference at round 5 is 0.027908
-number of identified TFBS in this iteration is 2579
+difference at round 5 is 0.291271
+number of identified TFBS in this iteration is 11202
 *****************************
-
+difference at round 6 is 0.149076
+number of identified TFBS in this iteration is 11707
+*****************************
+difference at round 7 is 0.080551
+number of identified TFBS in this iteration is 12199
+*****************************
+difference at round 8 is 0.102966
+number of identified TFBS in this iteration is 12911
+*****************************
+difference at round 9 is 0.013957
+number of identified TFBS in this iteration is 13388
+*****************************
+difference at round 10 is 0.016491
+number of identified TFBS in this iteration is 13584
+*****************************
+difference at round 11 is 0.035020
+number of identified TFBS in this iteration is 13609
+*****************************
+difference at round 12 is 0.035579
+number of identified TFBS in this iteration is 13612
+*****************************
+difference at round 13 is 0.052709
+number of identified TFBS in this iteration is 13608
+*****************************
+difference at round 14 is 0.047094
+number of identified TFBS in this iteration is 13585
+*****************************
+difference at round 15 is 0.031336
+number of identified TFBS in this iteration is 13570
+*****************************
+difference at round 16 is 0.035249
+number of identified TFBS in this iteration is 13561
+*****************************
+difference at round 17 is 0.019745
+number of identified TFBS in this iteration is 13549
+*****************************
+difference at round 18 is 0.016325
+number of identified TFBS in this iteration is 13534
+*****************************
+difference at round 19 is 0.006753
+number of identified TFBS in this iteration is 13522
+*****************************
 
 The output log shows the number of the predicted TFBSs at each iteration of the fitting.  In addition,  it shows that at
 each iteration the distance of a dinucleotide matrix from the currently predicted TFBSs and the previous set. Upon conv-
