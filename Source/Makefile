@@ -32,7 +32,7 @@ $(TEST_EXECUTABLE): $(COMMON_OBJECTS) $(TEST_OBJECTS)
 	$(CC) $(CFLAGS) $(LDLIBS) $< -o $@
 
 motevo: motevo.c
-	g++ -O2 motevo.c -o motevo
+	g++ -w -O2 motevo.c -o motevo
 
 clean:
 	rm -rf *.o
