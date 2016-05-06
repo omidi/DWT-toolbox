@@ -321,6 +321,7 @@ def find_cutoff(S):
             fitted_s_0 = s_0
     return fitted_s_0
 
+
 def freq_matrix_4D(alg):
     """returns a matrix of the letter frequences"""
     matrix = {}
@@ -482,6 +483,22 @@ def main():
     clean_up_directory(args, iteration, TF)
     calculate_PS_posterior(args, TF, program_dir)
     generate_diLogo(args, TF, program_dir)
+    cmd = ' '.join([
+        sys.executable,
+        os.path.join(program_dir, "DWT_TFBS_prediction.py"),
+        '-i %s' % args.fasta_file,
+        '-d %s' % os.path.join(args.output_dir,'%s.dwt' % TF),
+        '-o %s' % os.path.join(args.output_dir, '%s.TFBS_predictions' % TF),
+        '-c %f' % args.min_post,
+        '-b' if args.with_background else '',
+    ])
+    if not run(cmd):
+         sys.stderr.write ( "\nError in running the TFBS prediction\n" )
+         print "command: %s" % cmd
+         print 'Program halts!\n'
+    run("rm %s" % os.path.join(args.output_dir,'%s.alg' % TF))
+
+
 
 if __name__ == '__main__':
         main()

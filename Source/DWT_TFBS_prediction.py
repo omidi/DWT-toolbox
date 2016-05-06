@@ -48,7 +48,7 @@ def run(cmd):
     stdout_value, stderr_value = proc.communicate()
     if proc.poll() > 0:
         return -1
-    return stdout_value
+    return 0
 
 
 
@@ -117,7 +117,6 @@ def fit_prior(S):
     return fitted_s_0
 
 
-
 def main():
     args = arguments()
     if args.with_background:
@@ -157,7 +156,6 @@ def main():
                     "DWT_score",
                     "posterior\n"
                     ]))
-
         for line in output:
             score = float(line.split()[-1])
             posterior =  pr(score, prior)

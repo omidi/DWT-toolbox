@@ -11,27 +11,65 @@ CEBPB.dwt = DWT flat file that contains the binding specificity model for CEBPB 
 seq.fasta = contains a  number of DNA sequences in FASTA format. Sequences should  not be separated by TAB or new  line
 ('\n') characters.
 
-CTCF_param = contains the parameter values for running the DWT model. 
-CEBPB_param = contains the parameter values for running the DWT model. 
+CTCF_param = contains the parameter values for running the DWT model (only when the C++ program is going to be used).
+CEBPB_param = contains the parameter values for running the DWT model (only when the C++ program is going to be used).
 
 
 Example 1
 ---------
-It is Assumed that the binary file of the DWT model, called 'DWT_TFBS_prediction', is placed in the Source directory at
-'../../Source/'. For running this example, execute the following command:
+It is Assumed that the binary file of the DWT model, called 'DWT_TFBS_prediction' and its Python wrapper script, is pla-
+ced in the Source directory at '../../Source/'. For running this example, execute the following command:
 
-../../Source/DWT_TFBS_prediction CTCF.dwt seq.fasta CTCF_params
+/usr/local/bin/python ../../Source/DWT_TFBS_prediction.py -i seq.fasta -d CEBPB.dwt -o CEBPB.TFBS -c 0.25 -b
 
 output file:
-       CTCF_results.txt: contains the DWT score for each site within the DNA sequences from both strands. This includes
-       all sites (from both strands) within the regions, as given by the FASTA file. See '../../manual.txt'
-       for information on the output file format.
+       CTCF.TFBS: contains the DWT score for each binding site within the DNA sequences  from both strands.  The minimum
+                  posterior cutoff is  set as 0.25. In this example,  the background  nucleotide frequency is calculated
+                  from the input DNA sequences.  If a uniform background nucleotide sequence  is preferred,  simply drop
+                  the option '-b'. For more information see '../../manual.txt'.
+
+For this example, the content of the output like should look like this:
+
+seq     start   end     strand  TF      site    DWT_score       posterior
+seq5    48      60      -       CEBPB   TTGCACAAGCTT    8.6091  0.576666
+seq5    52      64      +       CEBPB   TTGTGCAATAAA    9.7937  0.816633
+seq7    145     157     +       CEBPB   TTGCTCAATAAC    8.0780  0.444727
+seq13   49      61      +       CEBPB   TTGTGAAATGAC    8.0006  0.425704
+seq29   78      90      -       CEBPB   TTGCCCAACAGC    7.5205  0.314428
+seq40   68      80      -       CEBPB   TTTTGCAATGAC    7.9722  0.418776
+seq56   14      26      -       CEBPB   TTGTGAAATAAC    8.5128  0.553000
+seq56   77      89      +       CEBPB   TTGGGAAATACT    7.3090  0.270715
+seq58   27      39      -       CEBPB   TTGTGCAACTTA    9.0829  0.686305
+seq58   31      43      +       CEBPB   TTGCACAAGTGA    7.2691  0.262910
+seq75   7       19      -       CEBPB   TTGCATAATTTC    7.5864  0.328804
+seq91   59      71      -       CEBPB   TGACGCAATATA    7.5636  0.323792
+seq100  133     145     +       CEBPB   TGATGCAACAAG    8.3816  0.520389
+seq105  80      92      +       CEBPB   TGATGTAATCCT    7.3452  0.277921
+seq132  43      55      +       CEBPB   TGACGCAATAAC    7.5070  0.311525
+seq138  44      56      -       CEBPB   TGATGTAATCCT    7.3452  0.277921
+seq196  118     130     -       CEBPB   TTGAGCAACAAC    7.8418  0.387413
+seq200  17      29      +       CEBPB   TGATGCAACAGG    8.5015  0.550205
+seq201  47      59      +       CEBPB   TTGTGAAATCCC    8.7741  0.616354
+seq273  119     131     -       CEBPB   TGATGCAACCCG    8.5827  0.570208
+seq299  142     154     -       CEBPB   TTGCATAATATA    7.4333  0.295941
+seq305  82      94      -       CEBPB   TGTTGCAATTGT    8.3751  0.518766
+seq375  51      63      +       CEBPB   TTTTGCAATGAC    7.9722  0.418776
+seq384  44      56      -       CEBPB   TTGTGAAACAGC    7.9197  0.406055
+seq387  88      100     -       CEBPB   TTGGGCAACAGC    7.9852  0.421944
+seq414  48      60      -       CEBPB   TGACACAATACC    7.6415  0.341077
+seq435  96      108     +       CEBPB   TTTTGCAATGAC    7.9722  0.418776
+
+
+where first line is designated for the header,  and the following line contains the information about the binding sites.
+This includes the position of  the site and its strand,  the actual sequence of the site, the DWT scores and finally the
+posterior of binding.
 
 
 Example 2
 ---------
-It is Assumed that the binary file of the DWT model, called 'DWT_TFBS_prediction', is placed in the Source directory at
-'../../Source/'. For running this example, execute the following command:
+It is Assumed that the binary file of the DWT model, called 'DWT_TFBS_prediction' is properly compiled and placed in the
+Source directory at '../../Source/'. For running this example, execute the following command:
+
 
 ../../Source/DWT_TFBS_prediction CEBPB.dwt seq.fasta CEBPB_params
 
@@ -39,4 +77,37 @@ Note that here in the 'CEBPB_params' a uniform background model for the backgrou
 
 output file:
        CEBPB_results.txt: contains the DWT score for each site within the DNA sequences from both strands. This includes
-       all sites (from both strands) within the regions, as given by the FASTA file.
+       all sites (from both strands) within the regions,  as given by the FASTA file.  Unlike in Example 1,  here in the
+       output file we only have the DWT scores and not the posterior of binding.
+
+The content of the output file for this example should look like this:
+
+seq1    0       12      +       CEBPB   TCAAACACTATG    -4.9848
+seq1    0       12      -       CEBPB   CATAGTGTTTGA    -4.5755
+seq1    1       13      +       CEBPB   CAAACACTATGT    -9.6845
+seq1    1       13      -       CEBPB   ACATAGTGTTTG    -7.7797
+seq1    2       14      +       CEBPB   AAACACTATGTT    -2.7726
+seq1    2       14      -       CEBPB   AACATAGTGTTT    -8.3336
+seq1    3       15      +       CEBPB   AACACTATGTTT    -8.2176
+seq1    3       15      -       CEBPB   AAACATAGTGTT    -4.0281
+seq1    4       16      +       CEBPB   ACACTATGTTTA    -4.6828
+seq1    4       16      -       CEBPB   TAAACATAGTGT    -7.7862
+seq1    5       17      +       CEBPB   CACTATGTTTAG    -8.6252
+seq1    5       17      -       CEBPB   CTAAACATAGTG    -6.9229
+seq1    6       18      +       CEBPB   ACTATGTTTAGT    -6.8062
+seq1    6       18      -       CEBPB   ACTAAACATAGT    -7.1493
+seq1    7       19      +       CEBPB   CTATGTTTAGTG    -3.6337
+seq1    7       19      -       CEBPB   CACTAAACATAG    -9.6246
+seq1    8       20      +       CEBPB   TATGTTTAGTGT    -7.1041
+seq1    8       20      -       CEBPB   ACACTAAACATA    -3.2436
+seq1    9       21      +       CEBPB   ATGTTTAGTGTG    -4.8713
+seq1    9       21      -       CEBPB   CACACTAAACAT    -8.0245
+seq1    10      22      +       CEBPB   TGTTTAGTGTGT    -7.4233
+seq1    10      22      -       CEBPB   ACACACTAAACA    -4.3200
+seq1    11      23      +       CEBPB   GTTTAGTGTGTT    -6.3611
+seq1    11      23      -       CEBPB   AACACACTAAAC    -9.3373
+seq1    12      24      +       CEBPB   TTTAGTGTGTTT    -3.9077
+...
+
+Above we see the position of each site, strand, TFBS sequence, and finally the DWT score. Note that in this example, th-
+ere is no cutoff over the DWT scores. Therefore, all possible sites along with their DWT scores will be reported.
