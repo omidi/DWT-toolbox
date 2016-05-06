@@ -9,6 +9,8 @@ each tools separately.
 More specifically, following tools are provided in this repository:
 
 * DWT_model: A C++ implementation of the DWT model, which users can scan DNA sequences for identifying binding sites under the DWT model.
+* DWT_model: A Python wrapper for predicting TFBS within a set of DNA sequences. It reports the position of binding sites
+ within the DNA sequences as well as their DWT score and posterior of binding.
 * Positional_Dependency_Posterior: A C++ implementation can be found that is useful for calculating the posterior probabilities
 of positional dependencies within TF binding sites.
 * diLogo: A Python script for generating diLogo, a graphical representation of the positional dependency model, provided a DWT flat file.

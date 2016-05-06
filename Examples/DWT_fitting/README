@@ -18,7 +18,7 @@ BHLHE.fasta = A set of DNA sequences that are provided in the FASTA format.  The
 
 Example 1
 ---------
-It is supposed that the Python script fitting_DWT_model.py is placed in the Source directory, located at:
+It is supposed that the Python script 'fitting_DWT_model.py' is placed in the Source directory, located at:
 '../../Source/'. For running this example, execute the following command:
 
 /usr/local/bin/python ../../Source/fitting_DWT_model.py -w CEBPB.wm -f CEBPB.fasta -o CEBPB -t CEBPB -b -v
@@ -83,7 +83,8 @@ ocedure continues iteratively  until 11th iteration where the distance is 0.0059
 
 output files are stored in CEBPB directory as includes:
     CEBPB.dwt: Storing the fitted DWT model for CEBPB.
-    CEBPB.alg: Set of 134 identified TFBSs. At each line a TFBS and its posterior probability.
+    CEBPB.TFBS_predictions: Set of 319 identified TFBSs including their relative positions within the DNA sequences, DWT
+                            scores and posterior probability of TF binding (these sites have minimum posterior of 0.5).
     CEBPB.pdf: diLogo plot for the final DWT model.
     CEBPB.post: Posterior probability of positional dependency between all pairs of positions.
     intermediate_results: This directory contains intermediate files that were produced while running the program, incl-
@@ -92,82 +93,39 @@ output files are stored in CEBPB directory as includes:
 
 Example 2
 ---------
-It is supposed that the Python script fitting_DWT_model.py is placed in the Source directory, located at:
+It is supposed that the Python script 'fitting_DWT_model.py' is placed in the Source directory, located at:
 '../../Source/'. For running this example, execute the following command:
 
-/usr/local/bin/python ../../Source/fitting_DWT_model.py -w BHLHE.wm -f BHLHE.fasta -o BHLHE -p 0.3 -v
+/usr/local/bin/python ../../Source/fitting_DWT_model.py -w BHLHE.wm -f BHLHE.fasta -o BHLHE -p 0.9 -v
 
 In this example, we run the program for a set of FASTA sequences that are stored in the BHLHE.fasta file, and use an in-
 itial PSWM model given by BHLHE.wm. The output of the program is stored in a directory which is called BHLHE. Here we a-
-re explicitly specified 0.3 as the minimum posterior (option -p)  for selecting TFBSs.  Since we did not use  option -b,
+re explicitly specified 0.9 as the minimum posterior (option -p)  for selecting TFBSs.  Since we did not use  option -b,
 background nucleotide frequency is set to a uniform distribution for all bases. Finally,  we are running the  program in
 verbose mode (-v option). Upon running the above command, following output should appear on the screen:
 
-number of identified TFBS in iteration 1 is 3441
+number of identified TFBS in iteration 1 is 76
 *****************************
-difference at round 2 is 1.205832
-number of identified TFBS in this iteration is 7150
+difference at round 2 is 1.494307
+number of identified TFBS in this iteration is 370
 *****************************
-difference at round 3 is 0.603752
-number of identified TFBS in this iteration is 9345
+difference at round 3 is 0.106644
+number of identified TFBS in this iteration is 347
 *****************************
-difference at round 4 is 0.367309
-number of identified TFBS in this iteration is 10490
+difference at round 4 is 0.002739
+number of identified TFBS in this iteration is 340
 *****************************
-difference at round 5 is 0.291271
-number of identified TFBS in this iteration is 11202
-*****************************
-difference at round 6 is 0.149076
-number of identified TFBS in this iteration is 11707
-*****************************
-difference at round 7 is 0.080551
-number of identified TFBS in this iteration is 12199
-*****************************
-difference at round 8 is 0.102966
-number of identified TFBS in this iteration is 12911
-*****************************
-difference at round 9 is 0.013957
-number of identified TFBS in this iteration is 13388
-*****************************
-difference at round 10 is 0.016491
-number of identified TFBS in this iteration is 13584
-*****************************
-difference at round 11 is 0.035020
-number of identified TFBS in this iteration is 13609
-*****************************
-difference at round 12 is 0.035579
-number of identified TFBS in this iteration is 13612
-*****************************
-difference at round 13 is 0.052709
-number of identified TFBS in this iteration is 13608
-*****************************
-difference at round 14 is 0.047094
-number of identified TFBS in this iteration is 13585
-*****************************
-difference at round 15 is 0.031336
-number of identified TFBS in this iteration is 13570
-*****************************
-difference at round 16 is 0.035249
-number of identified TFBS in this iteration is 13561
-*****************************
-difference at round 17 is 0.019745
-number of identified TFBS in this iteration is 13549
-*****************************
-difference at round 18 is 0.016325
-number of identified TFBS in this iteration is 13534
-*****************************
-difference at round 19 is 0.006753
-number of identified TFBS in this iteration is 13522
-*****************************
+
 
 The output log shows the number of the predicted TFBSs at each iteration of the fitting.  In addition,  it shows that at
 each iteration the distance of a dinucleotide matrix from the currently predicted TFBSs and the previous set. Upon conv-
 ergence (distance < 0.05), the program stops and the results will be stored in BHLHE directory. In final round, the pro-
-gram predicted 2579 TFBSs.
+gram predicted 340 TFBSs.
 
 output files in BHLHE directory:
     BHLHE.dwt: DWT flat file for BHLHE.
-    BHLHE.alg: Set of 3268 identified TFBSs. At each line a TFBS and its posterior probability.
+    BHLHE.TFBS_predictions: Set of 340 identified TFBSs including their relative positions within the DNA sequences, DWT
+                            scores and posterior probability of TF binding (these sites have minimum posterior of 0.90).
     BHLHE.pdf: diLogo plot for the final DWT model.
     BHLHE.post: Posterior probability of positional dependency between all pairs of positions.
     intermediate_results: This directory contains intermediate files that were produced while

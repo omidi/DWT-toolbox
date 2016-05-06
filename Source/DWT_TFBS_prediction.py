@@ -7,7 +7,6 @@ import textwrap
 import numpy as np
 from itertools import combinations, product
 from string import upper
-import time
 
 def arguments():
     import argparse

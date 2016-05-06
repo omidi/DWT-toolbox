@@ -492,7 +492,7 @@ def main():
         '-c %f' % args.min_post,
         '-b' if args.with_background else '',
     ])
-    if not run(cmd):
+    if run(cmd):
          sys.stderr.write ( "\nError in running the TFBS prediction\n" )
          print "command: %s" % cmd
          print 'Program halts!\n'
