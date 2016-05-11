@@ -1,14 +1,14 @@
-This directory contains input files, parameter file for running the program responsible for fitting the DWT model. It is
-assumed that the dependencies are compiled as reside in their directories, as well as Python scripts are running. For m-
-ore information, see the ''../../manual.txt'' file.
+This directory contains input files, parameter file for running the program that is responsible for fitting a DWT model.
+It is assumed that the dependencies are compiled as placed in their directories,  as well as Python scripts are running.
+For more information see the ''../../manual.txt'' file.
 
 
 Input files:
 ------------
-CEBPB.wm =  Position-specific weight matrix (PSWM) file for CEBPB.
+CEBPB.wm =  Position specific weight matrix (PSWM) file for CEBPB.
 
 CEBPB.fasta = A set of DNA sequences that are provided in the FASTA format.  These sequences have been obtained from the
-              ENCODE ChIP-seq experiment for CEBPB. This WM is obtained from the SwissRegulon database.
+              ENCODE ChIP-seq experiment for CEBPB. This PSWM is obtained from the SwissRegulon database.
 
 BHLHE.wm = A PSWM file for BHLHE. The PSWM file is obtained from the SwissRegulon database.
 
@@ -18,18 +18,18 @@ BHLHE.fasta = A set of DNA sequences that are provided in the FASTA format.  The
 
 Example 1
 ---------
-It is supposed that the Python script 'fitting_DWT_model.py' is placed in the Source directory, located at:
-'../../Source/'. For running this example, execute the following command:
+It is supposed that the Python script 'fitting_DWT_model.py' is placed in the '../../Source/' directory. For running th-
+is example, execute the following command:
 
 /usr/local/bin/python ../../Source/fitting_DWT_model.py -w CEBPB.wm -f CEBPB.fasta -o CEBPB -t CEBPB -b -v
 
-Note that, any other path for Python can be replaced instead of /usr/local/bin/python. The above example, runs the prog-
-ram for a set of FASTA sequences that are stored in the CEBPB.fasta file, and uses an initial PSWM model which is  given
-by CEBPB.wm. The output of the  program is stored in a directory which is called CEBPB. As specified by using the option
--b, we  are using a random  background model  for nucleotide frequencies that is fitted to the input DNA sequences. This
-background nucleotide model is used for calculating the  PSWM and DWT scores. The name  of the TF is explicitly given by
-the -t option, even though that is an optional parameter. Finally, we are running the program in the verbose mode as sp-
-ecified by the -v option). Upon running the above command, following output should appear on the screen:
+Note that,  depending on the local machine,  any other path for Python can be replaced instead of /usr/local/bin/python.
+The above example,  runs the program for  a set of FASTA sequences that are stored in the CEBPB.fasta file,  and uses an
+initial PSWM model which is given by CEBPB.wm. The output of the program is stored in a directory which is called CEBPB.
+As specified by using the option -b, we are using non-uniform background nucleotide frequencies that are calculated from
+the input DNA sequences.  This background nucleotide model is used for calculating the DWT scores. The name of the TF is
+explicitly given by the option -t, even though that is an optional parameter. Finally, we are running the program in the
+verbose mode as specified by the -v option). Upon running the above command, following output should appear on screen:
 
 
 number of identified TFBS in iteration 1 is 213
@@ -72,18 +72,18 @@ number of identified TFBS in this iteration is 318
 *****************************
 
 
-First line shows how many TF binding sites (TFBSs) are being identified after using the input PSWM model. Since the min-
-imum posterior parameter is not given,  it is assumed by default a minimum posterior of 0.5. Following that, a DWT model
-is built on the selected TFBSs,  and it is used for identifying new TFBSs. In the second round a set containing 271 TFBS
-were identified. We are comparing the dinucleotide frequency matrix of the two consequent rounds as a measure for conve-
-rgence. The iteration is converged if the distance between the two dinucleotide matrices are smaller than 0.05. This pr-
-ocedure continues iteratively  until 11th iteration where the distance is 0.005919 (below <0.05). At the final iteration
-286 TFBS were identified and stored in the CEBPB.alg in the CEBPB directory.
+First line shows how many TFBSs are being identified after using the input PSWM model. Since the minimum posterior para-
+meter is not given, it is assumed by default a minimum posterior of 0.5. Following that, a DWT model is generated on the
+selected TFBSs, and it is used for identifying new set of TFBSs. In the second round a set containing 277 TFBS were ide-
+ntified.  We are comparing the di-nucleotide frequency matrix of the two consequent rounds as a measure for convergence.
+The iteration is converged if the distance between the two di-nucleotide matrices are smaller than 0.01.  This procedure
+continues iteratively for 13 iteration where the distance is 0.007981 (distance <0.01). At the final iteration 318 TFBSs
+were identified and stored in the CEBPB.alg in the CEBPB directory.
 
 
-output files are stored in CEBPB directory as includes:
+Output files are stored in CEBPB directory which includes:
     CEBPB.dwt: Storing the fitted DWT model for CEBPB.
-    CEBPB.TFBS_predictions: Set of 319 identified TFBSs including their relative positions within the DNA sequences, DWT
+    CEBPB.TFBS_predictions: Set of 318 identified TFBSs including their relative positions within the DNA sequences, DWT
                             scores and posterior probability of TF binding (these sites have minimum posterior of 0.5).
     CEBPB.pdf: diLogo plot for the final DWT model.
     CEBPB.post: Posterior probability of positional dependency between all pairs of positions.
@@ -118,9 +118,9 @@ number of identified TFBS in this iteration is 340
 
 
 The output log shows the number of the predicted TFBSs at each iteration of the fitting.  In addition,  it shows that at
-each iteration the distance of a dinucleotide matrix from the currently predicted TFBSs and the previous set. Upon conv-
-ergence (distance < 0.05), the program stops and the results will be stored in BHLHE directory. In final round, the pro-
-gram predicted 340 TFBSs.
+each iteration the distance of a di-nucleotide matrix from the currently predicted TFBSs and the previous set. Upon con-
+vergence (distance < 0.01), the program stops and the results will be stored in BHLHE directory. In the final round, the
+there is a total of 340 TFBSs identified.
 
 output files in BHLHE directory:
     BHLHE.dwt: DWT flat file for BHLHE.

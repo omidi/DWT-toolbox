@@ -1,4 +1,4 @@
-This directory contains input files, parameter file for running the DWT model. It is  assumed that the source  code has
+This directory contains input files,  parameter file for running the DWT model.  It is assumed that the source code has
 been properly compiled. If not, see the '../../Source/README' or '../../manual.txt'.
 
 
@@ -8,8 +8,7 @@ CTCF.dwt = DWT flat file that contains the binding specificity model for CTCF un
 
 CEBPB.dwt = DWT flat file that contains the binding specificity model for CEBPB under the DWT model.
 
-seq.fasta = contains a  number of DNA sequences in FASTA format. Sequences should  not be separated by TAB or new  line
-('\n') characters.
+seq.fasta = Contains DNA sequences in FASTA format. Sequences should not be separated by TAB or new line characters.
 
 CTCF_param = contains the parameter values for running the DWT model (only when the C++ program is going to be used).
 CEBPB_param = contains the parameter values for running the DWT model (only when the C++ program is going to be used).
@@ -23,7 +22,7 @@ ced in the Source directory at '../../Source/'. For running this example, execut
 /usr/local/bin/python ../../Source/DWT_TFBS_prediction.py -i seq.fasta -d CEBPB.dwt -o CEBPB.TFBS -c 0.25 -b
 
 output file:
-       CTCF.TFBS: contains the DWT score for each binding site within the DNA sequences  from both strands.  The minimum
+       CEBPB.TFBS: contains the DWT score for each binding site within the DNA sequences from both strands.  The minimum
                   posterior cutoff is  set as 0.25. In this example,  the background  nucleotide frequency is calculated
                   from the input DNA sequences.  If a uniform background nucleotide sequence  is preferred,  simply drop
                   the option '-b'. For more information see '../../manual.txt'.
@@ -111,3 +110,37 @@ seq1    12      24      +       CEBPB   TTTAGTGTGTTT    -3.9077
 
 Above we see the position of each site, strand, TFBS sequence, and finally the DWT score. Note that in this example, th-
 ere is no cutoff over the DWT scores. Therefore, all possible sites along with their DWT scores will be reported.
+
+
+Example 3
+---------
+Running TFBS prediction for CTCF:
+
+/usr/local/bin/python ../../Source/DWT_TFBS_prediction.py -i seq.fasta -d CTCF.dwt -o CTCF.TFBS -c 0.75
+
+output file:
+       CTCF.TFBS: contains the DWT score for each binding site  within the DNA sequences from both strands.  The minimum
+                  posterior cutoff is  set as 0.75. In this example, the uniform distribution is used for the background
+                  nucleotide frequencies. Bellow shows the content of the output file.
+
+seq     start   end     strand  TF      site                    DWT_score posterior
+seq3    34      54      -       CTCF    CTTCCACCAGGCGGCGCCGC    13.1416 0.996095
+seq3    37      57      +       CTCF    GCGCCGCCTGGTGGAAGCAA    12.3074 0.991053
+seq83   117     137     +       CTCF    CTCCCACCAGCAGGCGGTGG    11.7555 0.984564
+seq91   17      37      -       CTCF    GCGCCAGCTAGTGGTAGGAG    11.2385 0.974382
+seq91   20      40      +       CTCF    CTACCACTAGCTGGCGCCAG    13.8008 0.997976
+seq104  14      34      +       CTCF    GACCCACTAGGAGGCGCCGC    10.9653 0.966602
+seq120  117     137     +       CTCF    GCAGCCCCTGCAGGCCCCCA    9.8522  0.904840
+seq238  11      31      -       CTCF    CTACCCCCTACAGGTCAAAT    9.3806  0.855771
+seq238  14      34      +       CTCF    TGACCTGTAGGGGGTAGCAG    11.5093 0.980340
+seq290  75      95      -       CTCF    TGGCCGCCAGGGAGCGCTGT    12.3784 0.991661
+seq290  78      98      +       CTCF    GCGCTCCCTGGCGGCCACGG    11.7837 0.984987
+seq341  21      41      +       CTCF    CCACCCCCAGGTGGCGCTGT    11.7270 0.984125
+seq345  72      92      -       CTCF    GCGCCCTCTAGCGGAGGCCG    10.8247 0.961753
+seq345  75      95      +       CTCF    CCTCCGCTAGAGGGCGCTGC    12.3327 0.991274
+seq375  0       20      -       CTCF    CCACCCCCTGCTGCTGCTGG    8.9176  0.788782
+seq418  3       23      -       CTCF    TGGGCACCAGGTGGGGCCCC    10.3393 0.939306
+seq418  6       26      +       CTCF    GCCCCACCTGGTGCCCAAGC    10.5573 0.950607
+seq425  37      57      -       CTCF    CGCCCGCCAGGGGGCGCGCG    11.9107 0.986754
+seq425  40      60      +       CTCF    GCGCCCCCTGGCGGGCGTCA    12.4179 0.991981
+

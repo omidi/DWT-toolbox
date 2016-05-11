@@ -14,9 +14,9 @@ $(info Unzipping the boost library. )
 BOOST := $(shell tar -xf boost_1_41_0.tar.gz)
 
 $(info Now compiling the programs. )
-.PHONY: all target tests 
+.PHONY: initialization all target tests
 
-all: target tests motevo clean
+all: initialization target tests motevo clean
 
 target: $(EXECUTABLE)
 

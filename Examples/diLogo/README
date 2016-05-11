@@ -1,5 +1,5 @@
-This directory contains input files for generating diLogo and DWT flat files. It is assumed that the required library and
-tools are being installed, for more information see:  '../../manual.txt'
+This directory contains input files for generating diLogo and DWT flat files. It is assumed that the Python scripts that
+are located at  '../../Source/' are running properly. For more information see '../../manual.txt'.
 
 
 Input files:
@@ -15,24 +15,24 @@ CEBPB.post = Posterior of dependency between pairs of positions within the bindi
 CTCT.alg = A file that contains a set of binding sites for CTCF, where each of the sequences have a weight.
 
 
-In the following examples, we assumed that the diLogo.py and generate_DWT_model.py are being located in the Source dire-
-ctory located at '../../Source/'.
+In the following examples, we assumed that the 'diLogo.py' and 'generate_DWT_model.py' are placed in the '../../Source/'
+directory.
 
 
 Example 1
 ---------
-Showing an example of generating diLogo for CTCF:
+Showing an example of generating a diLogo for CTCF:
 
 /usr/local/bin/python ../../Source/diLogo.py -i CTCF.dwt -p CTCF.post
 
 
 output file:
-       CTCF.pdf: The diLogo for CTCF in PDF format. Note that by default, positions are taken as dependent if they have
-       at least a posterior of dependeny of 0.9.
+       CTCF.pdf: The diLogo for CTCF in PDF format. Note that two positions are assumed to be dependent if the posterior
+       of positional dependency is at minimum 0.9.  This is a default posterior threshold and it can be explicitly given
+       by the '-c' option.
 
 
-
-Example 1
+Example 2
 ---------
 Showing an example of generating diLogo for CREBP: 
 
@@ -40,9 +40,8 @@ Showing an example of generating diLogo for CREBP:
 
 
 output file:
-       CEBPB.pdf: The diLogo for CEBPB in PDF format. In this example, unlike Example 1, the minimum posterior of dep-
-       endency needs to be 0.5. Therefore, that would lead to a higher number of identified dependencies.
-
+       CEBPB.pdf: The diLogo for CEBPB in PDF format. In this example, unlike Example 1, the minimum posterior of depen-
+       dency needs to be 0.5.
 
 
 Example 3
@@ -53,20 +52,8 @@ Generating a DWT flat file from a set of aligned sequences.
 
 
 output file:
-       CTCF.dwt: Contains the DWT flat file as generated from the set input sequences. By default the name of TF in the
-       DWT flat file is set to 'TF'. However, this can be specified at the time of running by option -t. See the next
-       example.
-
-
-
-Example 4
----------
-Generating a DWT flat file from a set of aligned sequences. 
-
-/usr/local/bin/python ../../Source/generate_DWT_model.py -i CTCF.alg -t CTCF > CTCF.dwt
-
-
-output file:
-       CTCF.dwt: Contains the DWT flat file as generated from the set input sequences. In this example, the DWT flat
-       file has 'CTCF' as the TF name in the first line.
+       CTCF.dwt: Contains the DWT flat file as generated from the set input sequences. By default, the name of TF in the
+       DWT flat file is set to 'TF'. However, the TF name can be specified at the time of running by option -t. Moreover
+       sequences in the input file can have an optional weight,  separated by TAB,  otherwise they will receive the same
+       weight.
 

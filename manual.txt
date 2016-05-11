@@ -8,8 +8,9 @@ CONTENTS:
    2.1 DWT flat file
        2.1.1 Where to find DWT flat files
    2.2 DNA FASTA file
-   2.3 Parameter file
-   2.4 Output file
+   2.3 Output file
+   2.4. Background nucleotide frequency
+   2.5. Cutoff for the minimum posterior
 3. Input/Output for calculating posterior of dependency
    3.1 Posterior of dependency output
 4. Prerequisites for running 'diLogo.py'
@@ -36,10 +37,11 @@ This can be done by going to the Source directory and execute the following comm
 make all
 
 The above command, first, uncompress boost_1_41_0.tar.gz. In the implementation of the DWT model, we have used the boost
-library. Afterwards, it produces the object files and finally the executables. The executable for the TFBS prediction is
-called 'DWT_TFBS_prediction'. Another program, which is called 'positional_dependency_posterior', is for calculating the
-posterior of positional dependency between pairs of positions within the TFBS. In addition, the Makefile compiles MotEvo
-(version 1.03) which is used in fitting the DWT model to a set of DNA sequences and initial weight matrix model.
+library. Afterwards,  it produces the object files and finally the executables.  The executable for transcription factor
+binding sites (TFBSs) prediction is called 'DWT_TFBS_prediction'.
+Another program, which is called 'positional_dependency_posterior', is for calculating the posterior of positional depe-
+ndency between pairs of positions within the TFBS. In addition, the Makefile compiles MotEvo (version 1.03) which is us-
+ed in fitting the DWT model to a set of DNA sequences and initial position specific weight matrix (PSWM) model.
 
 If it is preferred to compile the program manually, first it is required to uncompress  'boost_1_41_0.tar.gz'. This task
 is done by executing the following command in the terminal:
@@ -98,20 +100,21 @@ This command will produce the executable 'positional_dependency_posterior' which
 sitional dependency between pairs of binding positions.
 
 
-
-1. Input/Output for TFBS prediction
-In this section we describe  the input parameters (i.e., arguments) that are needed for running the DWT_TFBS_prediction.
+2. Input/Output for TFBS prediction
+In this section we describe  the input parameters (i.e., arguments) that are needed for running the program for predict-
+ing TFBSs for a TF.  For doing this, we have implemented a Python script that is called 'DWT_TFBS_prediction.py' and can
+be found in the 'Source' directory.
 Below shows an example of how to run the program:
 
-/Source/DWT_TFBS_prediction CTCF.dwt sequences.fasta param_file.txt
+/usr/local/bin/python Source/DWT_TFBS_prediction.py -d CTCF.dwt -i seq.fasta -o CTCF.TFBS -c 0.75 -b
 
 We now explain each of these input parameters, with the same order.
 
 
 2.1. DWT flat file
 The DWT flat  file encodes the binding specificity of a TF under the DWT model. It serves the same purpose as the normal
-WM (PSWM) file, but includes more information about the probability (or frequency) of dinucleotides at each pairs of po-
-sitions within TFBS.
+PSWM file, but includes more information about the probability (or frequency) of dinucleotides at each pairs of position
+within the TFBS. This argument is given by the option '-d'.
 
 Below, we show an example of a DWT flat file:
 
@@ -147,8 +150,8 @@ NOTE: the order of the dinucleotides in the second file must be always kept as a
 
 Next lines, show the dinucleotide frequencies at each pairs of positions. For instance, the third line shows the dincul-
 eotides frequencies at position 1 and 2. There are in  total N*(N-1)/2 lines that encode the dinucleotide frequencies at
-each pairs of position for a binding site of length N. For instance, for CTCF, which the length of site is 20, there are
-190 lines in the DWT flat file.
+each pairs of position for a TFBS of length N. For instance, for CTCF, which the length of site is 20, there are 190 li-
+nes in the DWT flat file.
 
 For generating a DWT flat file, from a set of aligned sequences see 'generate_DWT_model.py' in the 'Source' directory or
 see section '5. Generating DWT flat file from a set of k-mers' of the current manual.
@@ -156,13 +159,13 @@ see section '5. Generating DWT flat file from a set of k-mers' of the current ma
 
 2.1.1. Where to find DWT flat files
 We have made DWT flat files for 78 human TFs, which can be found at: http://crunch.unibas.ch/DWT/table.html
-In addition, we are providing the diLogos, WM logos and enrichment scores for each of the models (see the DWT paper).
-Moreover, a set of 78 DWT flat files can be found in the 'DWT_models' directory.
+In addition, we are providing the diLogos, PSWM logos and enrichment scores for each of the models (see the DWT paper).
+Finally, a set of 78 DWT flat files can be found in the 'DWT_models' directory.
 
 
 2.2. DNA FASTA file
-The DNA FASTA provides the program with the set of DNA sequences that will be searched for TFBS. Bellow shows an example
-of a FASTA file:
+The DNA FASTA provides the program with the set of DNA sequences that will be searched for TFBS. This is given by '-i'.
+Bellow shows an example of a FASTA file:
 
 >hg19_chr9_100273500_100273596_reg1000903.p2_15.004990099_+
 TCAAACACTATGTTTAGTGTGTTTGTTTTTTTAGAAGGTACTTTCCCATATGACTAAGAGAATGAAATCAGCCAGTGAAAATAACTGCAAATGAGCC
@@ -180,66 +183,45 @@ a whole, not several lines separated with '\n' (new line) or white space charact
 'Examples/TFBS_prediction' directory.
 
 
-2.3 Parameter file
-Input parameter file which sets parameters for the DWT program. The name of each parameter is preceded by '#' character.
-Example bellow demonstrates the content of a parameter file:
+2.3. Output file
+This option ('-o') gives the name of output file which the final results will be written in it. If the file already exi-
+sts, running the program causes to re-write the content of the file.
+At each line of the output file,  there is information about a TFBS.  This includes the sequence ID,  relative start and
+end positions within the sequence,  TFBS strand, TFBS sequence, DWT score and finally the posterior probability of bind-
+ing. Bellow shows an example content of the output file.
 
 
-#background
-A       0.25
-C       0.25
-G       0.25
-T       0.25
-
-#output_file
-results.txt
-
-
-The 'background' parameter specifies the background nucleotide probabilities, independent of their position. This is us-
-ed to calculate the likelihood of each binding site under the background model.  In above, a uniform background is given
-(each nucleotide is equally likely),  but based on the usage, user can change the background frequencies.  However, user
-needs to make sure that the probabilities are normalized (sum of them is equal to 1).
-The output_file option, provides the name of the output file where the results of DWT program will be copied in.  If the
-file is already exist, the content will be re-written, otherwise a new file with the 'results.txt' will be created.
-
-
-2.4 Output file
-The output file, after running the DWT program, will contain following information:
-
->hg19_chr9_100273500_100273596_reg1000903.p2_15.004990099_+     0       20      +       CTCF    CCTTGAATTCTCAGCTGACA    -15.9948
->hg19_chr9_100273500_100273596_reg1000903.p2_15.004990099_+     0       20      -       CTCF    TGTCAGCTGAGAATTCAAGG    -4.6522
->hg19_chr9_100273500_100273596_reg1000903.p2_15.004990099_+     1       21      +       CTCF    CTTGAATTCTCAGCTGACAT    -12.3138
->hg19_chr9_100273500_100273596_reg1000903.p2_15.004990099_+     1       21      -       CTCF    ATGTCAGCTGAGAATTCAAG    -3.8257
->hg19_chr9_100273500_100273596_reg1000903.p2_15.004990099_+     2       22      +       CTCF    TTGAATTCTCAGCTGACATG    -13.3190
->hg19_chr9_100273500_100273596_reg1000903.p2_15.004990099_+     2       22      -       CTCF    CATGTCAGCTGAGAATTCAA    -14.4652
->hg19_chr9_100273500_100273596_reg1000903.p2_15.004990099_+     3       23      +       CTCF    TGAATTCTCAGCTGACATGT    -8.0776
->hg19_chr9_100273500_100273596_reg1000903.p2_15.004990099_+     3       23      -       CTCF    ACATGTCAGCTGAGAATTCA    -15.9692
->hg19_chr9_100273500_100273596_reg1000903.p2_15.004990099_+     4       24      +       CTCF    GAATTCTCAGCTGACATGTT    -5.8385
->hg19_chr9_100273500_100273596_reg1000903.p2_15.004990099_+     4       24      -       CTCF    AACATGTCAGCTGAGAATTC    -7.8037
->hg19_chr9_100273500_100273596_reg1000903.p2_15.004990099_+     5       25      +       CTCF    AATTCTCAGCTGACATGTTA    -14.4202
->hg19_chr9_100273500_100273596_reg1000903.p2_15.004990099_+     5       25      -       CTCF    TAACATGTCAGCTGAGAATT    -14.3011
->hg19_chr9_100273500_100273596_reg1000903.p2_15.004990099_+     6       26      +       CTCF    ATTCTCAGCTGACATGTTAT    -19.2765
->hg19_chr9_100273500_100273596_reg1000903.p2_15.004990099_+     6       26      -       CTCF    ATAACATGTCAGCTGAGAAT    -15.2481
->hg19_chr9_100273500_100273596_reg1000903.p2_15.004990099_+     7       27      +       CTCF    TTCTCAGCTGACATGTTATT    -13.0199
->hg19_chr9_100273500_100273596_reg1000903.p2_15.004990099_+     7       27      -       CTCF    AATAACATGTCAGCTGAGAA    -11.8477
->hg19_chr9_100273500_100273596_reg1000903.p2_15.004990099_+     8       28      +       CTCF    TCTCAGCTGACATGTTATTT    -6.9871
->hg19_chr9_100273500_100273596_reg1000903.p2_15.004990099_+     8       28      -       CTCF    AAATAACATGTCAGCTGAGA    -11.9803
->hg19_chr9_100273500_100273596_reg1000903.p2_15.004990099_+     9       29      +       CTCF    CTCAGCTGACATGTTATTTC    -15.7468
->hg19_chr9_100273500_100273596_reg1000903.p2_15.004990099_+     9       29      -       CTCF    GAAATAACATGTCAGCTGAG    -13.5692
->hg19_chr9_100273500_100273596_reg1000903.p2_15.004990099_+     10      30      +       CTCF    TCAGCTGACATGTTATTTCT    -12.8781
->hg19_chr9_100273500_100273596_reg1000903.p2_15.004990099_+     10      30      -       CTCF    AGAAATAACATGTCAGCTGA    -10.1037
->hg19_chr9_100273500_100273596_reg1000903.p2_15.004990099_+     11      31      +       CTCF    CAGCTGACATGTTATTTCTA    -10.7539
+seq     start   end     strand  TF      site    DWT_score       posterior
+seq3    34      54      -       CTCF    CTTCCACCAGGCGGCGCCGC    13.1416 0.996095
+seq3    37      57      +       CTCF    GCGCCGCCTGGTGGAAGCAA    12.3074 0.991053
+seq83   117     137     +       CTCF    CTCCCACCAGCAGGCGGTGG    11.7555 0.984564
+seq91   17      37      -       CTCF    GCGCCAGCTAGTGGTAGGAG    11.2385 0.974382
+seq91   20      40      +       CTCF    CTACCACTAGCTGGCGCCAG    13.8008 0.997976
+seq104  14      34      +       CTCF    GACCCACTAGGAGGCGCCGC    10.9653 0.966602
+seq120  117     137     +       CTCF    GCAGCCCCTGCAGGCCCCCA    9.8522  0.904840
+seq238  11      31      -       CTCF    CTACCCCCTACAGGTCAAAT    9.3806  0.855771
+seq238  14      34      +       CTCF    TGACCTGTAGGGGGTAGCAG    11.5093 0.980340
+seq290  75      95      -       CTCF    TGGCCGCCAGGGAGCGCTGT    12.3784 0.991661
+seq290  78      98      +       CTCF    GCGCTCCCTGGCGGCCACGG    11.7837 0.984987
+seq341  21      41      +       CTCF    CCACCCCCAGGTGGCGCTGT    11.7270 0.984125
+seq345  72      92      -       CTCF    GCGCCCTCTAGCGGAGGCCG    10.8247 0.961753
+seq345  75      95      +       CTCF    CCTCCGCTAGAGGGCGCTGC    12.3327 0.991274
+seq375  0       20      -       CTCF    CCACCCCCTGCTGCTGCTGG    8.9176  0.788782
 ...
 
 
-Each line is designated to show the DWT score for each site.  This information is separated by TAB.  First column is the
-sequence IDs as in the input FASTA file,  the next two columns indicate the start and the end of the site within the DNA
-sequence. It follows by the strand information: + for forward (positive) strand and - for reverse (negative) strand. The
-name of the TF, which is obtained from the  first line of the DWT flat file,  the sequence of the site,  and finally the
-DWT score. The DWT score is calculated according the the Log(P(s|DWT) / P(s|BG)),  which is the log-likelihood  ratio of
-the sequence being generated under the DWT model or a background model.  In this work we use the order zero Markov Chain
-model as the background model, i.e., the probability of each nucleotide is independent from its adjacent position.
+2.4. Background nucleotide frequency
+The DWT score, in the same way as the PSWM score,  is calculated by the log-likelihood ratio of the site being generated
+under the DWT model to the background model. The background model that is used in this program is based on single nucle-
+otide frequencies.  The option '-b' indicates whether use the input DNA sequences to calculate the background nucleotide
+frequencies. If the option '-b' is not used, a uniform background frequency will be used.  Under uniform background, all
+nucleotides are equally (with 0.25 probability) likely.
 
+
+2.5. Cutoff for the minimum posterior
+By using option '-c' we can provide the minimum cutoff for the posterior of binding. In this way, we can filter out seq-
+uences that are less likely to be TFBS from being written in the output file. The minimum posterior by default is assum-
+ed to be 0.5.
 
 
 3. Input/Output for calculating posterior of dependency
@@ -366,7 +348,7 @@ ences and a PSWM (or WM) file, the 'fitting_DWT_model.py' to be found in 'Source
 erative scheme. The DNA sequences can be of various lengths. For instance, a set of peaks from a ChIP-seq data. The PSWM
 file needs to follow a certain format (see section '6.2.1. PSWM format').  The final output of the program is a DWT flat
 file, posterior of positional dependencies for all pairs of positions,  a diLogo in PDF format for the final DWT, and  a
-set of predicted TF binding sites.
+set of predicted TFBSs.
 
 
 6.1. Prerequisites for running 'fitting_DWT_model.py'
@@ -385,8 +367,7 @@ these tools. This includes:
 
 
 6.1.1. Installing MotEvo
-MotEvo is a general program for predicting and analyzing TF binding sites. For documentations on MotEvo see the main pa-
-per:
+MotEvo is a general program for predicting and analyzing TFBSs. For documentations on MotEvo see the main paper:
 
 MotEvo:integrated Bayesian probabilistic methods for inferring regulatory sites and motifs on multiple alignments of DNA
 sequences. Bioinformatics. 2012 Feb 15;28(4):487-94
@@ -417,7 +398,7 @@ st import arguments: PSWM file and DNA FASTA file. Afterwards, we explain other 
 
 6.2.1. PSWM format (-w option)
 The the PSWM format that both MotEvo and fitting_DWT_model.py use as input are provided in a TRANSFAC-like format. Below
-is an example of a single WM:
+is an example of a single PSWM:
 
 //
 NA name_of_TF
@@ -470,23 +451,22 @@ Other input parameters are explained here.
     -b or --with_bg: Using this option tells the program to use the frequencies of nucleotides (bases) in the input DNA
                      sequences for setting the background frequencies. If it is not provided, a uniform background freq-
                      uences will be used for calculating the PSWM or DWT scores.
-    -p or --min_post: At each round of  iteration,  the program selects a set of binding sites to build up the model for
-                      the next round. By default,  we are selecting every binding  site that has a posterior probability
-                      of at least 0.5. However, user can explicitly define the minimum posterior threshold by using this
-                      option.
-    -t or --tf: It gives the name of the TF. If not provided, the WM file name is used as the name of the TF.
+    -p or --min_post: At each round of iteration,  the program selects a set of TFBSs to build up the model for the next
+                      round.  By default,  we are selecting every TFBS that has a posterior probability of at least 0.5.
+                      However, user can explicitly define the minimum posterior threshold by using this option.
+    -t or --tf: It gives the name of the TF. If not provided, the PSWM file name is used as the name of the TF.
     -v or --verbose: To print out some information, while running the program, on the screen.
 
 
 
 6.3. Output files
-After running the program sucesfully, a set of files will be generated and placed in the output directory (or the curre-
-nt working directory if the option -o is not used). This mainly includes:
-    - A DWT flat file, which has the 'dwt' extension.
-    - A set of binding sites with the 'alg' extension.
-    - Posterior of positional dependencies between all pairs of positions. This files has 'post' extension.
-    - A diLogo for the DWT model in PDF format.
-    - A directory named 'intermediate_results' that contains files that were produced during running the program.
+After running the program successfully, a set of  files will be generated and placed in the output directory  (or in the
+current working directory if the option -o is not used). This mainly includes (imaging TF is the name of protein):
+    - TF.dwt: A DWT flat file, which is obtained at the end of the last iteration.
+    - TF.TFBS_predictions: A set of TBFSs that have passed the minimum posterior threshold (given by -p).
+    - TF.post: Posterior of positional dependencies between all pairs of positions.
+    - TF.pdf: A diLogo for the DWT model in PDF format.
+    - intermediate_results: A directory that contains files that were produced during running the program.
 
 
 
