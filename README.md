@@ -8,21 +8,15 @@ each tools separately.
 
 More specifically, following tools are provided in this repository:
 
-* DWT_model: A C++ implementation of the DWT model, which users can scan DNA sequences for identifying binding sites under the DWT model.
-This code comes with a useful Python wrapper script that can be used for running the C++ code and calculating the posterior probability
- of the TF binding.
-* Positional_Dependency_Posterior: A C++ implementation can be found that is useful for calculating the posterior probabilities
-of positional dependencies within TF binding sites.
-* diLogo: A Python script for generating diLogo, a graphical representation of the positional dependency model, provided a DWT flat file.
-* Fitting_DWT_model: A Python implementation for a pipeline that can be used for fitting the DWT models, given a set of
-DWT sequences and an initial position specific weight matrix (PSWM) model. This program uses other scripts and executables, therefore,
-it's first required to make sure all the other programs in the pipeline are functional.
+* DWT model: Using this feature of the toolbox, users can identify TF binding sites (TFBSs). It is a C++ implementation of the DWT model, which scans DNA sequences for identifying TFBSs under the positional dependency (DWT) model. This code comes with a useful Python wrapper script that can be used for running the C++ code and calculating the posterior probability of the TF binding.
+* Posterior of positional dependency: For calculating the probability of positional dependency between any pairs of positions, we have implemented a C++ program. Given a set of binding sites, this program can give an indea about which pairs of positions are highly dependent. 
+* diLogo: A Python script for generating 'diLogo' which is a a graphical representation of the positional dependency model. DiLogo is the cousin of the well-known sequence logo, which includes information on positional dependency and the di-nucleotide tendency at the dependent positions. This script receives, as input, a DWT flat file and posteriors of positional dependency between all pairs of positions. 
+* Fitting a DWT model: Sometimes we would like to fit a DWT model to a set of observed TF binding DNA sequences. For example, peaks that are extracted from a ChIP-seq assay. This Python implementation can be used for this purpose. To run the script, users need a set of DNA sequences (FASTA format) and an initial position specific weight matrix (PSWM or WM) model. The latter can be extracted from known PSWM databases, such as JASPAR or SwissRegulon. 
 
-For compiling the C++ codes, we have created `Makefile` under `Source` directory. In Linux and Mac, by simply running  `make`
-in the `Source` directory, the executable of the program will be created.
+For compiling the C++ codes, we created `Makefile` under `Source` directory. In Linux and Mac, it's fairly easy: just run  `make all` command while in the `Source` directory and the binaries for the programs will be created. Here, we have explicitly assumed that the `g++` is already installed in the machine. For more information see [here](https://gcc.gnu.org/). 
 
-For implementing the C++ codes, we have used several functions from the [Boost library](http://www.boost.org/). We have
-put a compatible version of the Boost directory in the `Source` directory, which needs to be first un-tarred. This is easily
+For implementing the C++ codes, we made use of several functions from the [Boost library](http://www.boost.org/). We
+put a compatible version of the Boost directory in the `Source` directory, which needs to be first uncompressed. This is easily
 done by executing the following command in `Source` directory:
 
 ```
@@ -30,7 +24,7 @@ tar -xvf boost_1_41_0.tar.gz
 ```
 
 ## Dependencies for the diLogo.py 
-In order to run the diLogo script, it is required to have a version of Python 2.7. In addition to that, the script uses
+In order to run the diLogo script, it is required to have Python 2.7 already installed. In addition to that, the script uses
 `pyx` and `argparse` libraries. For installing these libraries, we use `pip` as it's demonstrated bellow:
 
 ```
