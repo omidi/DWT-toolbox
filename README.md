@@ -1,12 +1,9 @@
 # DWT-toolbox: A collection of programs for analyzing positional dependency within TF binding sites
-Here you find a number of useful programs for analyzing TF binding specificity under the DWT model. We have implemented
-several functionalities of the DWT model in a form of a website which can be found at [dwt.unibas.ch](https://dwt.unibas.ch).
+Here you find a number of useful programs for analyzing TF binding specificity under the dinucleotide weight tensor (DWT) model. Under the DWT model, unlike the classical position specific weight matrix (PSWM) model, we allow positional dependency between any pairs of positions and use this information for describing the binding specificity of a TF. Within this toolbox, we implemented several functionalities that are useful for analyzing TF binding under the DWT model. Moreover, a website has been implemented that offers similar functionalities. Here is the address of our website: [http://dwt.unibas.ch/fcgi/dwt](http://dwt.unibas.ch/fcgi/dwt).
 
-Here we are providing a set of tools and scripts that can be used offline. All these tools are described in detail in the
-`manual.txt` file. Moreover, the content of `Examples` directory includes several sub-directory that demonstrate the usage of
-each tools separately.
+In this bundle, we tried to describe the usage of these tools in detail. Therefore, users are recommended to consult with the `manual.txt` file. Moreover, the content of `Examples` directory includes several sub-directory that each of them demonstrate the usage of each tool separately.
 
-More specifically, following tools are provided in this repository:
+More specifically, users can find the following functionalities: 
 
 * DWT model: Using this feature of the toolbox, users can identify TF binding sites (TFBSs). It is a C++ implementation of the DWT model, which scans DNA sequences for identifying TFBSs under the positional dependency (DWT) model. This code comes with a useful Python wrapper script that can be used for running the C++ code and calculating the posterior probability of the TF binding.
 * Posterior of positional dependency: For calculating the probability of positional dependency between any pairs of positions, we have implemented a C++ program. Given a set of binding sites, this program can give an indea about which pairs of positions are highly dependent. 
