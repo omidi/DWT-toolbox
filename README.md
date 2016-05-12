@@ -5,10 +5,10 @@ In this bundle, we tried to describe the usage of these tools in detail. Therefo
 
 More specifically, users can find the following functionalities: 
 
-* DWT model: Using this feature of the toolbox, users can identify TF binding sites (TFBSs). It is a C++ implementation of the DWT model, which scans DNA sequences for identifying TFBSs under the positional dependency (DWT) model. This code comes with a useful Python wrapper script that can be used for running the C++ code and calculating the posterior probability of the TF binding.
+* DWT model: Using this feature of the toolbox, users can identify TF binding sites (TFBSs). It is a C++ implementation of the DWT model, which scans DNA sequences for identifying TFBSs under the DWT model. This code comes with a useful Python wrapper script that can be used for running the C++ code and calculating the posterior probability of the TF binding.
 * Posterior of positional dependency: For calculating the probability of positional dependency between any pairs of positions, we have implemented a C++ program. Given a set of binding sites, this program can give an indea about which pairs of positions are highly dependent. 
 * diLogo: A Python script for generating 'diLogo' which is a a graphical representation of the positional dependency model. DiLogo is the cousin of the well-known sequence logo, which includes information on positional dependency and the di-nucleotide tendency at the dependent positions. This script receives, as input, a DWT flat file and posteriors of positional dependency between all pairs of positions. 
-* Fitting a DWT model: Sometimes we would like to fit a DWT model to a set of observed TF binding DNA sequences. For example, peaks that are extracted from a ChIP-seq assay. This Python implementation can be used for this purpose. To run the script, users need a set of DNA sequences (FASTA format) and an initial position specific weight matrix (PSWM or WM) model. The latter can be extracted from known PSWM databases, such as JASPAR or SwissRegulon. 
+* Fitting a DWT model: Sometimes we would like to fit a DWT model to a set of observed TF binding DNA sequences. For example, peaks that are extracted from a ChIP-seq assay. This Python implementation can be used for this purpose. To run the script, users need a set of DNA sequences (FASTA format) and an initial PSWM model. The latter can be extracted from known PSWM databases, such as [JASPAR](http://jaspar.genereg.net/) or [SwissRegulon](http://swissregulon.unibas.ch/fcgi/sr/swissregulon). 
 
 For compiling the C++ codes, we created `Makefile` under `Source` directory. In Linux and Mac, it's fairly easy: just run  `make all` command while in the `Source` directory and the binaries for the programs will be created. Here, we have explicitly assumed that the `g++` is already installed in the machine. For more information see [here](https://gcc.gnu.org/). 
 
@@ -45,8 +45,8 @@ saeed.omidi@gmail.com ,
 erik.vannimwegen@unibas.ch
 
 On Twitter:
-@NimwegenLab , 
-@SaeedOmidi
+[@NimwegenLab](https://twitter.com/NimwegenLab) , 
+[@SaeedOmidi](https://twitter.com/saeedomidi)
 
 Address:
 Core program Computational and Systems Biology, 
