@@ -27,10 +27,10 @@ def arguments():
                         help="""The posteriors between all pair of positions.
                         A C++ program, located in 'Positional_Dependency_Posterior' can be
                         used to calculate the posteriors of dependencies.""")
-    parser.add_argument('-c', dest='cutoff', action='store', required=False, default=0.9, type=float,  \
+    parser.add_argument('-c', dest='cutoff', action='store', required=False, default=0., type=float,  \
                         help="""Optional cutoff over the posteriors of dependency. This
                         argument is used to adjust the number of dependencies in the final
-                        diLogo. By default cutoff is set to 0.9.""")
+                        diLogo. By default cutoff is set to 0.""")
     parser.add_argument('-o',  dest='out_dir', action='store',
                         type=str, required=False,
                         help="""Optional argument that gives the output directory in which
