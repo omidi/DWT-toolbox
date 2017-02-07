@@ -17,7 +17,7 @@ Score::~Score() {
 
 Score::Score(Alignment& alg){
 	PRECISION = 15.;	// the default value of PRECISION
-	LAMBDA = .5;
+	LAMBDA = .125;
 	alignment = alg;
 	alpha_exponent = 1.;
 	logR = calculate_logR();
@@ -38,7 +38,7 @@ Score::Score(Alignment& alg){
 
 Score::Score(Alignment& alg, string tf_name){
 	PRECISION = 15.;	// the default value of PRECISION
-	LAMBDA = .5;
+	LAMBDA = .125;
 	alignment = alg;
 	alpha_exponent = 1.;
 	logR = calculate_logR();
