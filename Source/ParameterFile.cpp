@@ -14,7 +14,7 @@ ParameterFile::ParameterFile() {
 	resulting_file_name = "NULL";
 	background_is_set = false;
 	precision = 15.;
-	lambda = 0.5; // the default value is set to 1/8 to make have WM score
+	lambda = 0.125; // the default value is set to 1/8 to make have WM score
 	rho = 1.;
 	rho_is_set = false;
 }
@@ -27,7 +27,7 @@ ParameterFile::ParameterFile (string file){
 	lowest_score = -80.0;	// if lowest_score is not mentioned in param_file
 	resulting_file_name = "NULL";
 	precision = 15.;
-	lambda = 0.5; // the default value is set to 1/8 to make have WM score
+	lambda = 0.125; // the default value is set to 1/8 to make have WM score
 
 	rho = 1.;	// the default value of rho is 1.
 	rho_is_set = false;
