@@ -23,7 +23,7 @@
 enum Nucleotides {A=65, C=67, G=71, T=84};	// The numbers that assigned are ASCII codes of ACGT
 // this can be used in statements like "if (vec[1] == A)"
 #define ALPH_NUM	4
-//#define LAMBDA		0.125
+#define LAMBDA		0.125
 #define LGAMMA_4LAMBDA	(2*(lgamma(4*LAMBDA)))
 #define LGAMMA_LAMBDA	(lgamma(LAMBDA))
 #define LOG_10 			(log(10.))
